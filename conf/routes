@@ -5,12 +5,16 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index()
-GET     /start                           controllers.HomeController.start()
-GET     /undo                           controllers.HomeController.undo()
-GET     /redo                           controllers.HomeController.redo()
-GET     /switch                           controllers.HomeController.switchEasy()
-GET     /player/:number                           controllers.HomeController.selectPlayer(number: Int)
-GET     /playercount/:number                           controllers.HomeController.changePlayerCount(number: Int)
+GET     /startGame                  controllers.HomeController.startGame()
+GET     /goToPlayerCount            controllers.HomeController.goToPlayerCount()
+GET     /switchEasy                 controllers.HomeController.switchEasy()
+GET     /changePlayerCount/:count   controllers.HomeController.changePlayerCount(count: Int)
+GET     /selectPayer/:number        controllers.HomeController.selectPlayer(number: Int)
+GET     /addColumn                  controllers.HomeController.addColumn()
+GET     /selectCards/:coordinates   controllers.HomeController.selectCards(coordinates: String)
+GET     /exit                       controllers.HomeController.exit()
+GET     /undo                       controllers.HomeController.undo()
+GET     /redo                       controllers.HomeController.redo()
 
 
 # Map static resources from the /public folder to the /assets URL path
