@@ -17,7 +17,7 @@ import javax.inject.*
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+class SetController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
   private val injector = Guice.createInjector(new SetModule)
   private val controller = injector.getInstance(classOf[IController])
@@ -40,15 +40,20 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   private def result(action: => Unit) = Ok(views.html.index(ansiToHtml(captureOutput(action))))
-
-  def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.rules("Spielregeln"))
-  }
-
-
+  
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     result {
       tui = Tui(controller)
+    }
+  }
+
+  def continue(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val input = request.body.asFormUrlEncoded.flatMap(_.get("input").flatMap(_.headOption)).map(identity).getOrElse("")
+    result {
+      if (tui == null) {
+        tui = Tui(controller)
+      }
+      controller.handleAction(tui.actionFromInput(input))
     }
   }
 
@@ -110,6 +115,10 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     result {
       controller.handleAction(RedoAction())
     }
+  }
+
+  def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.index("")) // TODO
   }
 
   private def ansiToHtml(text: String): String = {

@@ -4,18 +4,20 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index()
-GET     /rules                      controllers.HomeController.rules()
-GET     /startGame                  controllers.HomeController.startGame()
-GET     /goToPlayerCount            controllers.HomeController.goToPlayerCount()
-GET     /switchEasy                 controllers.HomeController.switchEasy()
-GET     /changePlayerCount/:count   controllers.HomeController.changePlayerCount(count: Int)
-GET     /selectPayer/:number        controllers.HomeController.selectPlayer(number: Int)
-GET     /addColumn                  controllers.HomeController.addColumn()
-GET     /selectCards/:coordinates   controllers.HomeController.selectCards(coordinates: String)
-GET     /exit                       controllers.HomeController.exit()
-GET     /undo                       controllers.HomeController.undo()
-GET     /redo                       controllers.HomeController.redo()
+GET     /                           controllers.SetController.index()
++nocsrf
+POST    /                           controllers.SetController.continue()
+GET     /startGame                  controllers.SetController.startGame()
+GET     /goToPlayerCount            controllers.SetController.goToPlayerCount()
+GET     /switchEasy                 controllers.SetController.switchEasy()
+GET     /changePlayerCount/:count   controllers.SetController.changePlayerCount(count: Int)
+GET     /selectPayer/:number        controllers.SetController.selectPlayer(number: Int)
+GET     /addColumn                  controllers.SetController.addColumn()
+GET     /selectCards/:coordinates   controllers.SetController.selectCards(coordinates: String)
+GET     /exit                       controllers.SetController.exit()
+GET     /undo                       controllers.SetController.undo()
+GET     /redo                       controllers.SetController.redo()
+GET     /rules                      controllers.SetController.rules()
 
 
 # Map static resources from the /public folder to the /assets URL path

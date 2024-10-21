@@ -1,5 +1,12 @@
 @(tui: String)
 
-@main("Welcome to SET") {
-  <pre>@Html(tui)</pre>
+@main("SET Game") {
+  @Html(tui)
+  <p></p>
+  @helper.form(action = routes.SetController.continue()) {
+    <label for="input">Input:</label>
+    <input type="text" id="input" name="input" required>
+    <button type="submit">Continue</button>
+  }
+  <p><a href="@routes.SetController.exit()">View Game Rules</a></p>
 }
