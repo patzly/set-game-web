@@ -40,7 +40,7 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
   }
 
   private def result(action: => Unit) = Ok(views.html.index(ansiToHtml(captureOutput(action))))
-  
+
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     result {
       tui = Tui(controller)
@@ -50,10 +50,11 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
   def continue(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val input = request.body.asFormUrlEncoded.flatMap(_.get("input").flatMap(_.headOption)).map(identity).getOrElse("")
     result {
-      if (tui == null) {
+      if (tui != null) {
+        controller.handleAction(tui.actionFromInput(input))
+      } else {
         tui = Tui(controller)
       }
-      controller.handleAction(tui.actionFromInput(input))
     }
   }
 
