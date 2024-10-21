@@ -41,6 +41,11 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   private def result(action: => Unit) = Ok(views.html.index(ansiToHtml(captureOutput(action))))
 
+  def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.rules("Spielregeln"))
+  }
+
+
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     result {
       tui = Tui(controller)
