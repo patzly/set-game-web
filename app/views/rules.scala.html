@@ -1,0 +1,159 @@
+@(title: String)
+
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@title</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #e9e3d3; /* Hintergrundfarbe */
+                color: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+
+            main {
+                width: 100%;
+                max-width: 800px;
+                padding: 20px;
+            }
+
+            header {
+                background-color: #e9e3d3; /* Hintergrundfarbe anpassen */
+                color: white;
+                padding: 10px;
+                text-align: center;
+                border-radius: 8px;
+                width: 100%;
+            }
+
+            hr {
+                border: none;
+                height: 2px;
+                background-color: black; /* Schwarzer Balken */
+                margin: 20px 0; /* Abstand */
+                width: 100%; /* Breite auf 100% setzen */
+            }
+
+            .set-rule {
+                background-color: #e9e3d3; /* Hintergrundfarbe anpassen */
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                border: 2px solid black; /* Schwarzer Rand */
+            }
+
+            h1, h2 {
+                color: #333;
+                text-align: center;
+            }
+
+            p {
+                text-align: justify;
+            }
+
+            ul {
+                margin-left: 20px;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 10px auto;
+                border-radius: 8px;
+            }
+
+            footer {
+                display: flex; /* Flexbox für den Footer aktivieren */
+                flex-direction: column; /* Elemente untereinander anordnen */
+                align-items: center; /* Horizontale Zentrierung */
+                text-align: center; /* Text innerhalb des Footers zentrieren */
+                padding: 10px;
+                background-color: #e9e3d3; /* Hintergrundfarbe anpassen */
+                color: #333;
+                border-radius: 8px;
+                margin-top: 20px;
+                width: 100%; /* 100% Breite */
+            }
+
+            a {
+                color: #333; /* Farbe des Links auf #333 setzen */
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+
+        <header>
+            <h1>Die Regeln des Kartenspiels Set</h1>
+        </header>
+
+        <hr> <!-- Schwarzer Balken zwischen Header und Body -->
+
+        <main>
+            <section class="set-rule">
+                <h2>1. Ziel des Spiels</h2>
+                <p>Das Ziel des Spiels "Set" ist es, eine Gruppe von drei Karten zu finden, die zusammen ein Set bilden. Jede Karte zeigt Symbole mit vier Eigenschaften: Anzahl, Form, Farbe und Füllung.</p>
+                <img src="@routes.Assets.versioned("images/set_example_1.png")" alt="Beispiel für ein Set">
+            </section>
+
+            <section class="set-rule">
+                <h2>2. Die Karten</h2>
+                <p>Jede Karte hat eine Kombination aus den folgenden Eigenschaften:</p>
+                <ul>
+                    <li><strong>Anzahl:</strong> 1, 2 oder 3 Symbole</li>
+                    <li><strong>Form:</strong> Oval, Welle oder Raute</li>
+                    <li><strong>Farbe:</strong> Rot, Grün oder Lila</li>
+                    <li><strong>Füllung:</strong> Voll, gestreift oder leer</li>
+                </ul>
+                <img src="@routes.Assets.versioned("images/set_example_2.png")" alt="Beispiele der Karten">
+            </section>
+
+            <section class="set-rule">
+                <h2>3. Was ist ein Set?</h2>
+                <p>Ein Set besteht aus drei Karten, bei denen jede Eigenschaft entweder komplett gleich oder komplett verschieden ist. Zum Beispiel:</p>
+                <ul>
+                    <li>Alle Karten haben dieselbe Anzahl Symbole, oder jede Karte hat eine andere Anzahl.</li>
+                    <li>Alle Karten haben dieselbe Farbe, oder jede Karte hat eine andere Farbe.</li>
+                    <li>Alle Karten haben dieselbe Form, oder jede Karte hat eine andere Form.</li>
+                    <li>Alle Karten haben dieselbe Füllung, oder jede Karte hat eine andere Füllung.</li>
+                </ul>
+                <img src="@routes.Assets.versioned("images/set_example_3.png")" alt="Beispiel eines vollständigen Sets">
+            </section>
+
+            <section class="set-rule">
+                <h2>4. Spielablauf</h2>
+                <p>Zu Beginn werden 12 Karten offen auf den Tisch gelegt. Die Spieler versuchen so schnell wie möglich, ein Set zu finden. Sobald ein Spieler ein Set gefunden hat, nimmt er es vom Tisch, und drei neue Karten werden gezogen.</p>
+                <img src="@routes.Assets.versioned("images/set_table.png")" alt="Kartentisch im Spiel">
+            </section>
+
+            <section class="set-rule">
+                <h2>5. Spielende</h2>
+                <p>Das Spiel endet, wenn keine Sets mehr gefunden werden können. Der Spieler mit den meisten Sets gewinnt das Spiel.</p>
+                <img src="@routes.Assets.versioned("images/set_winner.png")" alt="Spielende">
+            </section>
+        </main>
+
+        <hr> <!-- Schwarzer Balken zwischen Body und Footer -->
+
+        <footer>
+            <p>&copy; 2024 Kartenspiel Set - Alle Rechte vorbehalten</p>
+            <p><a href="@routes.SetController.index()">Zur Startseite</a></p>
+        </footer>
+
+    </body>
+</html>
