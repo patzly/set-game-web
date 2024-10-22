@@ -119,7 +119,7 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
   }
 
   def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.rules("Spielregeln"))
+    Ok(views.html.rules())
   }
 
   private def ansiToHtml(text: String): String = {
