@@ -21,101 +21,68 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
 
   private val injector = Guice.createInjector(new SetModule)
   private val controller = injector.getInstance(classOf[IController])
-  private var tui: Tui = _
 
-  private def captureOutput(action: => Unit): String = {
-    val byteArrayStream = new ByteArrayOutputStream()
-    val printStream = new PrintStream(byteArrayStream)
-    val oldOut = System.out
-    synchronized {
-      try {
-        System.setOut(printStream)
-        action
-        System.out.flush()
-        byteArrayStream.toString()
-      } finally {
-        System.setOut(oldOut)
-      }
-    }
-  }
-
-  private def result(action: => Unit) = Ok(views.html.index(ansiToHtml(captureOutput(action))))
+  private def result =
+    Ok(views.html.index(ansiToHtml(controller.toString), ansiToHtml(controller.currentState)))
 
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      tui = Tui(controller)
-    }
+    result
   }
 
   def continue(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val input = request.body.asFormUrlEncoded.flatMap(_.get("input").flatMap(_.headOption)).map(identity).getOrElse("")
-    result {
-      if (tui != null) {
-        controller.handleAction(tui.actionFromInput(input))
-      } else {
-        tui = Tui(controller)
-      }
-    }
+    controller.handleAction(controller.actionFromInput(input))
+    result
   }
 
   def startGame(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(StartGameAction())
-    }
+    controller.handleAction(StartGameAction())
+    result
   }
 
   def goToPlayerCount(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(GoToPlayerCountAction())
-    }
+    controller.handleAction(GoToPlayerCountAction())
+    result
   }
 
   def switchEasy(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(SwitchEasyAction())
-    }
+    controller.handleAction(SwitchEasyAction())
+    result
   }
 
   def changePlayerCount(playerCount: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(ChangePlayerCountAction(playerCount))
-    }
+    controller.handleAction(ChangePlayerCountAction(playerCount))
+    result
   }
 
   def selectPlayer(number: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(SelectPlayerAction(number))
-    }
+    controller.handleAction(SelectPlayerAction(number))
+    result
   }
 
   def addColumn(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(AddColumnAction())
-    }
+    controller.handleAction(AddColumnAction())
+    result
   }
 
   def selectCards(coordinates: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(SelectCardsAction(coordinates.split("-").toList))
-    }
+    controller.handleAction(SelectCardsAction(coordinates.split("-").toList))
+    result
   }
 
   def exit(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(ExitAction())
-    }
+    controller.handleAction(ExitAction())
+    result
   }
 
   def undo(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(UndoAction())
-    }
+    controller.handleAction(UndoAction())
+    result
   }
 
   def redo(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    result {
-      controller.handleAction(RedoAction())
-    }
+    controller.handleAction(RedoAction())
+    result
   }
 
   def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>

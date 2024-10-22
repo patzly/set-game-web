@@ -1,11 +1,13 @@
-@(tui: String)
+@(gameOrSettings: String, state: String)
 
 @main("SET Game") {
     <div class="container">
-        @Html(tui)
+        <div>@Html(gameOrSettings)</div>
+        <p></p>
+        <div>@Html(state)</div>
         <p></p>
         @helper.form(action = routes.SetController.continue()) {
-            <label for="input">Enter your input:</label>
+            <label for="input">Input:</label>
             <input type="text" id="input" name="input" required>
             <button type="submit">Continue</button>
         }
