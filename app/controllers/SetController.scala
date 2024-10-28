@@ -23,7 +23,7 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
   private val controller = injector.getInstance(classOf[IController])
 
   private def result =
-    Ok(views.html.index(controller, ansiToHtml(controller.toString), ansiToHtml(controller.currentState)))
+    Ok(views.html.index(ansiToHtml(controller.toString), ansiToHtml(controller.currentState)))
 
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     result
