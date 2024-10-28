@@ -1,16 +1,51 @@
-@(gameOrSettings: String, state: String)
+@import de.htwg.se.set.controller.IController
+@import de.htwg.se.set.model.GameMode
+
+@(controller: IController, gameOrSettings: String, state: String)
 
 @main("SET Game") {
-    <div class="container">
-        <div>@Html(gameOrSettings)</div>
-        <p></p>
-        <div>@Html(state)</div>
-        <p></p>
-        @helper.form(action = routes.SetController.continue()) {
-            <label for="input">Input:</label>
-            <input type="text" id="input" name="input" required>
-            <button type="submit">Continue</button>
+    <div class="menu">
+        <a href="@routes.SetController.undo()" class="@{if(controller.canUndo) "" else "disabled"}">UNDO</a>
+        <a href="@routes.SetController.redo()" class="@{if(controller.canRedo) "" else "disabled"}">REDO</a>
+        @if(controller.settings.mode == GameMode.IN_GAME) {
+            <a href="@routes.SetController.exit()">EXIT</a>
         }
-        <p><a href="@routes.SetController.rules()">View Game Rules</a></p>
+    </div>
+    <div class="container">
+        @if(controller.settings.mode == GameMode.SETTINGS) {
+            <div class="settings">
+                <div class="row">
+                    <div class="label">
+                        <p>PLAYERS</p>
+                    </div>
+                    <div class="value">
+                        <a href="@routes.SetController.removePlayer()" class="@{if(controller.settings.playerCount > 1) "" else "disabled"}">-</a>
+                        <p>@{controller.settings.playerCount}</p>
+                        <a href="@routes.SetController.addPlayer()" class="@{if(controller.settings.playerCount < 10) "" else "disabled"}">+</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="label">
+                        <p>EASY MODE</p>
+                    </div>
+                    <div class="value">
+                        <a href="@routes.SetController.switchEasy()">@{if(controller.settings.easy) "ON" else "OFF"}</a>
+                    </div>
+                </div>
+                <a href="@routes.SetController.startGame()" class="button">START GAME</a>
+                <a href="@routes.SetController.rules()" class="button">GAME RULES</a>
+            </div>
+        } else {
+            <div class="game">
+                <div>@Html(gameOrSettings)</div>
+                <div>@Html(state)</div>
+                <p></p>
+                @helper.form(action = routes.SetController.continue()) {
+                    <label for="input">Input:</label>
+                    <input type="text" id="input" name="input" required>
+                    <button type="submit">Continue</button>
+                }
+            </div>
+        }
     </div>
 }

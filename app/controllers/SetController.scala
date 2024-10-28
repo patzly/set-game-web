@@ -23,7 +23,7 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
   private val controller = injector.getInstance(classOf[IController])
 
   private def result =
-    Ok(views.html.index(ansiToHtml(controller.toString), ansiToHtml(controller.currentState)))
+    Ok(views.html.index(controller, ansiToHtml(controller.toString), ansiToHtml(controller.currentState)))
 
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     result
@@ -52,6 +52,16 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
 
   def changePlayerCount(playerCount: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(ChangePlayerCountAction(playerCount))
+    result
+  }
+
+  def addPlayer(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount + 1))
+    result
+  }
+
+  def removePlayer(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount - 1))
     result
   }
 
