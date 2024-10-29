@@ -1,13 +1,14 @@
 @import de.htwg.se.set.controller.IController
 @import de.htwg.se.set.model.GameMode
 
-@(controller: IController, gameOrSettings: String, state: String)
+@(controller: IController, setController: SetController,gameOrSettings: String, state: String)
 
 @main("SET Game") {
     <div class="menu">
         <a href="@routes.SetController.undo()" class="@{if(controller.canUndo) "" else "disabled"}">UNDO</a>
         <a href="@routes.SetController.redo()" class="@{if(controller.canRedo) "" else "disabled"}">REDO</a>
         @if(controller.settings.mode == GameMode.IN_GAME) {
+            <a href="@routes.SetController.addColumn()" class=@{if(controller.game.selectedPlayer.isEmpty && (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) "" else "disabled"}">ADD CARDS</a>
             <a href="@routes.SetController.exit()">EXIT</a>
         }
     </div>
@@ -36,15 +37,35 @@
                 <a href="@routes.SetController.rules()" class="button">GAME RULES</a>
             </div>
         } else {
+            <hr>
             <div class="game">
-                <div>@Html(gameOrSettings)</div>
-                <div>@Html(state)</div>
-                <p></p>
+
+                <div class="row">
+                    <div class="cards-container">
+                    @for((card, idx) <- controller.game.tableCards.zipWithIndex) {
+                            <!-- Checkbox Input für das Auswählen der Karte -->
+                        <input type="checkbox" id="card-@idx" class="card-checkbox">
+                            <!-- Label wird mit dem Input verbunden und styled -->
+                        <label for="card-@idx" class="card @if(card.selected) {selected}">
+                            <p>@Html(setController.ansiToHtml(card.toString))</p>
+                        </label>
+                    }
+                    </div>
+                </div>
+                <div class="row">
                 @helper.form(action = routes.SetController.continue()) {
                     <label for="input">Input:</label>
                     <input type="text" id="input" name="input" required>
                     <button type="submit">Continue</button>
                 }
+                </div>
+                <div class="player-selection-container">
+                    <div class="player-selection">
+                    @for(i <- 1 to controller.settings.playerCount) {
+                        <a href="@routes.SetController.selectPlayer(i)" class="button">PLAYER @i: @controller.game.players(i - 1).sets.length</a>
+                    }
+                    </div>
+                </div>
             </div>
         }
     </div>
