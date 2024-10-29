@@ -5,8 +5,8 @@
 
 @main("SET Game") {
     <div class="menu">
-        <a href="@routes.SetController.undo()" class="@{if(controller.canUndo) "" else "disabled"}">UNDO</a>
-        <a href="@routes.SetController.redo()" class="@{if(controller.canRedo) "" else "disabled"}">REDO</a>
+        <a href="@routes.SetController.undo()" class="highlight @{if(controller.canUndo) "" else "disabled"}">UNDO</a>
+        <a href="@routes.SetController.redo()" class="highlight @{if(controller.canRedo) "" else "disabled"}">REDO</a>
         @if(controller.settings.mode == GameMode.IN_GAME) {
             <a href="@routes.SetController.exit()">EXIT</a>
         }
@@ -15,25 +15,25 @@
         @if(controller.settings.mode == GameMode.SETTINGS) {
             <div class="settings">
                 <div class="row">
-                    <div class="label">
-                        <p>PLAYERS</p>
-                    </div>
+                    <div class="label">PLAYERS</div>
                     <div class="value">
-                        <a href="@routes.SetController.removePlayer()" class="@{if(controller.settings.playerCount > 1) "" else "disabled"}">-</a>
-                        <p>@{controller.settings.playerCount}</p>
-                        <a href="@routes.SetController.addPlayer()" class="@{if(controller.settings.playerCount < 10) "" else "disabled"}">+</a>
+                        <a href="@routes.SetController.removePlayer()" class="button-left highlight @{if(controller.settings.playerCount > 1) "" else "disabled"}">@{"<"}</a>
+                        @{controller.settings.playerCount}
+                        <a href="@routes.SetController.addPlayer()" class="button-right highlight @{if(controller.settings.playerCount < 10) "" else "disabled"}">@{">"}</a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="label">
-                        <p>EASY MODE</p>
-                    </div>
+                    <div class="label">EASY MODE</div>
                     <div class="value">
-                        <a href="@routes.SetController.switchEasy()">@{if(controller.settings.easy) "ON" else "OFF"}</a>
+                        <a href="@routes.SetController.switchEasy()" class="highlight" style="margin-left: 2.25em">@{if(controller.settings.easy) "ON" else "OFF"}</a>
                     </div>
                 </div>
-                <a href="@routes.SetController.startGame()" class="button">START GAME</a>
-                <a href="@routes.SetController.rules()" class="button">GAME RULES</a>
+                <div class="centered" style="margin-top: 1.5em">
+                    <a href="@routes.SetController.startGame()" class="button">START GAME</a>
+                </div>
+                <div class="bottomed">
+                    <a href="@routes.SetController.rules()" class="highlight">GAME RULES</a>
+                </div>
             </div>
         } else {
             <div class="game">

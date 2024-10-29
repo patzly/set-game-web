@@ -1,10 +1,104 @@
 @font-face{
-    font-family: 'JetBrains Mono';
-    src: url('fonts/JetBrainsMono-Regular.ttf');
+    font-family: 'Jost Medium';
+    src: url('fonts/Jost-Medium.ttf');
+    font-weight: 100;
 }
 
 body {
-    padding-left: 1.5rem;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 12pt;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+a.highlight {
+    color: #000;
+    transition: color 0.3s;
+}
+a.highlight:hover {
+    color: #da0100;
+}
+
+.centered {
+    text-align: center;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    background-color: #e9e3d3;
+    border-bottom: 2px solid #000;
+}
+.menu a {
+    margin: 0.4em;
+    font-family: 'Jost Medium', monospace;
+    font-size: 18pt;
+}
+.menu a.disabled {
+    opacity: 0.32;
+    pointer-events: none;
+}
+
+.container {
+    flex-grow: 1;
+    background-color: #e9e3d3;
+    align-content: center;
+}
+
+.settings {
+    font-family: 'Jost Medium', monospace;
+    font-size: 18pt;
+}
+
+.settings .row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0.8em 0;
+}
+.settings .row .label {
+    text-align: end;
+}
+.settings .row .value {
+    text-align: start;
+    margin-left: 0.5em;
+}
+.settings .row .value a {
+    font-family: 'Jost Medium', monospace;
+    font-size: 18pt;
+}
+.settings .row .value a.disabled {
+    opacity: 0.32;
+    pointer-events: none;
+}
+.settings .row .value .button-left {
+    margin: 0 1em;
+}
+.settings .row .value .button-right {
+    margin: 0 1em;
+}
+
+.settings .button {
+    color: #060488;
+    background-color: #f4f1b4;
+    border: 2px solid #000;
+    border-radius: 16px;
+    padding: 8px 16px;
+    margin-top: 8em;
+    transition: border-radius 0.3s;
+}
+.settings .button:hover {
+    background-color: #f4f1b4;
+    border-radius: 28px;
+}
+
+.settings .bottomed {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 2em;
 }
