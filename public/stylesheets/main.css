@@ -74,11 +74,8 @@ a.highlight:hover {
     opacity: 0.32;
     pointer-events: none;
 }
-.settings .row .value .button-left {
-    margin: 0 1em;
-}
-.settings .row .value .button-right {
-    margin: 0 1em;
+.settings .row .value .button-left, .settings .row .value .button-right {
+    margin: 0 1.5em;
 }
 
 .settings .button {
