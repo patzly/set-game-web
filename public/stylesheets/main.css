@@ -1,26 +1,29 @@
 @font-face {
     font-family: 'Jost Medium';
     src: url('fonts/Jost-Medium.ttf');
-    font-weight: 100;
+    font-weight: 400;
+}
+
+:root {
+    --text-size: 18pt;
+    --text-font: 'Jost Medium';
+    --card-width: 130px;
+    --card-height: 80px;
+    --card-gap: 12px;
+    --card-radius: 16px;
 }
 
 body {
-    margin: 0;
     display: flex;
     flex-direction: column;
+    margin: 0;
     height: 100vh;
+    background-color: #e9e3d3;
 }
 
 a {
     text-decoration: none;
     color: #000;
-}
-a.highlight {
-    color: #000;
-    transition: color 0.3s;
-}
-a.highlight:hover {
-    color: #da0100;
 }
 
 .centered {
@@ -29,29 +32,36 @@ a.highlight:hover {
 
 .menu {
     display: flex;
-    justify-content: center;
-    background-color: #e9e3d3;
+    justify-content: start;
     border-bottom: 2px solid #000;
+    padding-left: 0.6em;
 }
 .menu a {
-    margin: 0.4em;
-    font-family: 'Jost Medium', monospace;
-    font-size: 18pt;
+    padding: 0.3em 0.6em;
+    font-family: var(--text-font), monospace;
+    font-size: var(--text-size);
+    color: #000;
+    transition: color 0.3s;
+}
+.menu a:hover {
+    color: #da0100;
 }
 .menu a.disabled {
     opacity: 0.32;
     pointer-events: none;
 }
 
-.container {
-    flex-grow: 1;
-    background-color: #e9e3d3;
-    align-content: center;
+.main {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .settings {
-    font-family: 'Jost Medium', monospace;
-    font-size: 18pt;
+    text-align: center;
+    font-family: var(--text-font), monospace;
+    font-size: var(--text-size);
 }
 
 .settings .row {
@@ -67,8 +77,8 @@ a.highlight:hover {
     margin-left: 0.5em;
 }
 .settings .row .value a {
-    font-family: 'Jost Medium', monospace;
-    font-size: 18pt;
+    font-family: var(--text-font), monospace;
+    font-size: var(--text-size);
 }
 .settings .row .value a.disabled {
     opacity: 0.32;
@@ -77,7 +87,6 @@ a.highlight:hover {
 .settings .row .value .button-left, .settings .row .value .button-right {
     margin: 0 1.5em;
 }
-
 .settings .button {
     color: #060488;
     background-color: #f4f1b4;
@@ -92,120 +101,93 @@ a.highlight:hover {
     border-radius: 28px;
 }
 
-.settings .bottomed {
-    position: absolute;
-    bottom: 0;
-    text-align: center;
+.bottom {
     width: 100%;
-    margin-bottom: 2em;
-    padding-left: 1.5rem;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 12pt;
-    background-color: #e9e3d3;
+    font-family: var(--text-font), monospace;
+    font-size: var(--text-size);
 }
 
-:root {
-    --card-width: 200px;
-    --card-margin: 10px;
+.rules {
+    padding-bottom: 1em;
+    text-align: center;
+}
+.rules a {
+    color: #000;
+    transition: color 0.3s;
+}
+.rules a:hover {
+    color: #da0100;
 }
 
-.menu {
-    display: flex;
-    justify-content: left;
-    padding: 10px;
-}
-
-.menu a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: #333;
-}
-
-.menu .button {
-    color: #333;
-}
-
-.menu a.disabled {
-    color: #888;
-    pointer-events: none;
-}
-
-.cards-container {
-    display: grid;
+.cards {
+    display: inline-grid;
     grid-template-rows: repeat(3, auto);
     grid-auto-flow: column;
-    gap: var(--card-margin);
-    width: max-content;
-    margin-top: 15%;
-    margin-bottom: 5%;
+    gap: var(--card-gap);
+}
 
+.card {
+    width: var(--card-width);
+    height: var(--card-height);
+    border: 2px solid #000;
+    border-radius: var(--card-radius);
+    background-color: #fff;
+    box-shadow: 0 0 0 transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    font-family: var(--text-font), monospace;
+    font-size: var(--text-size);
+}
+.card:hover {
+    box-shadow: rgba(50, 50, 93, 0.25) 0 6px 12px -2px, rgba(0, 0, 0, 0.3) 0 3px 7px -3px;
+}
+.card.selected {
+    border: 3px solid #ff6b6b;
 }
 
 .card-checkbox {
     display: none;
 }
-
-.card {
-    width: var(--card-width);
-    height: 120px;
-    padding: 10px;
-    border: 2px solid #333;
-    border-radius: 15px;
-    background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s, border-color 0.3s;
-    cursor: pointer;
-}
-
 .card-checkbox:checked + .card {
     border: 2px solid #ff6b6b;
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
-}
-
-.card:hover {
-    transform: scale(1.05);
-}
-.card.selected {
-    border: 3px solid #ff6b6b;
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
-}
-
-.game {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.player-selection-container {
-    background-color: #f4f1b4;
-    padding: 20px;
-    width: 100%;
-    height: 100%;
-    border-top: 2px solid #333;
-    margin-top: 6%;
 }
 
 .player-selection {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    background-color: #f4f1b4;
+    border-top: 2px solid #333;
+    padding-top: 0.7em;
+    padding-bottom: 0.5em;
 }
 
 .player-selection a {
     margin: 0 15px;
     text-decoration: none;
     color: #060488;
-    padding: 10px;
-    border-radius: 10px;
     transition: background-color 0.3s;
+    font-family: var(--text-font), monospace;
+    font-size: var(--text-size);
+    border-radius: 16px;
+    padding: 8px 16px;
+}
+.player-selection a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.player-selection a.selected {
+    border: 2px solid #000;
 }
 
-.player-selection a:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+.message {
+    background-color: #f4f1b4;
+    text-align: center;
+    padding-bottom: 1em;
+    font-size: 14pt;
 }
 
 input[type="text"] {
@@ -215,8 +197,3 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-
-button {
-    margin-top: 10px;
-}
-
