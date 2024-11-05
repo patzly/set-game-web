@@ -1,12 +1,19 @@
 @font-face {
-    font-family: 'Jost Medium';
-    src: url('fonts/Jost-Medium.ttf');
+    font-family: 'Jost';
+    src: url('fonts/Jost-Regular.ttf');
     font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Jost';
+    src: url('fonts/Jost-Medium.ttf');
+    font-weight: 500;
 }
 
 :root {
     --text-size: 18pt;
-    --text-font: 'Jost Medium';
+    --text-font: 'Jost';
+    --text-weight: 500;
     --card-width: 130px;
     --card-height: 80px;
     --card-gap: 12px;
@@ -26,10 +33,6 @@ a {
     color: #000;
 }
 
-.centered {
-    text-align: center;
-}
-
 .menu {
     display: flex;
     justify-content: start;
@@ -39,6 +42,7 @@ a {
 .menu a {
     padding: 0.3em 0.6em;
     font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
     font-size: var(--text-size);
     color: #000;
     transition: color 0.3s;
@@ -61,6 +65,7 @@ a {
 .settings {
     text-align: center;
     font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
     font-size: var(--text-size);
 }
 
@@ -78,6 +83,7 @@ a {
 }
 .settings .row .value a {
     font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
     font-size: var(--text-size);
 }
 .settings .row .value a.disabled {
@@ -87,7 +93,10 @@ a {
 .settings .row .value .button-left, .settings .row .value .button-right {
     margin: 0 1.5em;
 }
-.settings .button {
+.settings .button, .rules-container .button {
+    font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
     color: #060488;
     background-color: #f4f1b4;
     border: 2px solid #000;
@@ -96,14 +105,14 @@ a {
     margin-top: 8em;
     transition: border-radius 0.3s;
 }
-.settings .button:hover {
-    background-color: #f4f1b4;
+.settings .button:hover, .rules-container .button:hover {
     border-radius: 28px;
 }
 
 .bottom {
     width: 100%;
     font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
     font-size: var(--text-size);
 }
 
@@ -140,6 +149,7 @@ a {
     transition: border-color 0.3s, box-shadow 0.3s;
     cursor: pointer;
     font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
     font-size: var(--text-size);
 }
 .card:hover {
@@ -172,6 +182,7 @@ a {
     color: #060488;
     transition: background-color 0.3s;
     font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
     font-size: var(--text-size);
     border-radius: 16px;
     padding: 8px 16px;
@@ -196,4 +207,23 @@ input[type="text"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+.rules-container {
+    padding: 2em;
+    font-family: 'Jost', sans-serif;
+}
+
+.rules-container img {
+    width: 100%;
+    height: auto;
+}
+
+.rules-container h1, .rules-container h2 {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+}
+
+.rules-container hr {
+    border: 1px solid black;
 }

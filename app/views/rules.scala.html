@@ -6,17 +6,16 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>SET Game Rules</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
     </head>
     <body>
-        <img src="@routes.Assets.versioned("images/set-header.png")" alt="SET">
-        <h1>SET Spielregeln</h1>
-        <hr />
-        <section>
-            <h2>1. Ziel des Spiels</h2>
+        <div class="rules-container">
+            <img src="@routes.Assets.versioned("images/set-header.png")" alt="SET">
+            <h1>SET Spielregeln</h1>
+            <hr />
+            <h2>Ziel des Spiels</h2>
             <p>Das Ziel des Spiels "Set" ist es, eine Gruppe von drei Karten zu finden, die zusammen ein Set bilden. Jede Karte zeigt Symbole mit vier Eigenschaften: Anzahl, Form, Farbe und Füllung.</p>
-        </section>
-        <section>
-            <h2>2. Die Karten</h2>
+            <h2>Die Karten</h2>
             <p>Jede Karte hat eine Kombination aus den folgenden Eigenschaften:</p>
             <ul>
                 <li><strong>Anzahl:</strong> 1, 2 oder 3 Symbole</li>
@@ -24,9 +23,7 @@
                 <li><strong>Farbe:</strong> Rot, Grün oder Lila</li>
                 <li><strong>Füllung:</strong> Voll, gestreift oder leer</li>
             </ul>
-        </section>
-        <section>
-            <h2>3. Was ist ein Set?</h2>
+            <h2>Was ist ein Set?</h2>
             <p>Ein Set besteht aus drei Karten, bei denen jede Eigenschaft entweder komplett gleich oder komplett verschieden ist. Zum Beispiel:</p>
             <ul>
                 <li>Alle Karten haben dieselbe Anzahl Symbole, oder jede Karte hat eine andere Anzahl.</li>
@@ -34,19 +31,13 @@
                 <li>Alle Karten haben dieselbe Form, oder jede Karte hat eine andere Form.</li>
                 <li>Alle Karten haben dieselbe Füllung, oder jede Karte hat eine andere Füllung.</li>
             </ul>
-        </section>
-        <section>
-            <h2>4. Spielablauf</h2>
+            <h2>Spielablauf</h2>
             <p>Zu Beginn werden 12 Karten offen auf den Tisch gelegt. Die Spieler versuchen so schnell wie möglich, ein Set zu finden. Sobald ein Spieler ein Set gefunden hat, nimmt er es vom Tisch, und drei neue Karten werden gezogen.</p>
-        </section>
-        <section>
-            <h2>5. Spielende</h2>
+            <h2>Spielende</h2>
             <p>Das Spiel endet, wenn keine Sets mehr gefunden werden können. Der Spieler mit den meisten Sets gewinnt das Spiel.</p>
-        </section>
-        <hr />
-        <footer>
-            <p>&copy; 2024 Matthias Elbel & Patrick Zedler - Alle Rechte vorbehalten</p>
-            <p><a href="@routes.SetController.index()">Zur Startseite</a></p>
-        </footer>
+            <div style="margin-top: 2em; text-align: center">
+                <a href="@routes.SetController.index()" class="button">BACK TO SETTINGS</a>
+            </div>
+        </div>
     </body>
 </html>
