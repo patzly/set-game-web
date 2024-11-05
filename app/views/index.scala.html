@@ -4,19 +4,39 @@
 @(controller: IController, setController: SetController,gameOrSettings: String, state: String)
 
 @main("SET Game") {
-    <div class="menu">
-        <a href="@routes.SetController.undo()" class="@if(controller.canUndo) { } else { disabled }">UNDO</a>
-        <a href="@routes.SetController.redo()" class="@if(controller.canRedo) { } else { disabled }">REDO</a>
-        @if(controller.settings.mode == GameMode.IN_GAME) {
-            <a href="@routes.SetController.addColumn()" class="@if(controller.game.selectedPlayer.isEmpty && (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) { } else { disabled }">ADD CARDS</a>
-            <a href="@routes.SetController.exit()">EXIT</a>
-        }
-    </div>
+    <nav class="navbar navbar-expand-sm bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="@routes.Assets.versioned("images/favicon.png")" alt="Bootstrap" width="30" height="24">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                    <li class="nav-item">
+                        <a href="@routes.SetController.undo()" class="nav-link @if(!controller.canUndo) { disabled }">Undo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@routes.SetController.redo()" class="nav-link @if(!controller.canRedo) { disabled }">Redo</a>
+                    </li>
+                    @if(controller.settings.mode == GameMode.IN_GAME) {
+                        <li class="nav-item">
+                            <a href="@routes.SetController.addColumn()" class="nav-link @if(controller.game.selectedPlayer.isEmpty && (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) { } else { disabled }">Add Cards</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@routes.SetController.exit()" class="nav-link">Exit</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="main">
         @if(controller.settings.mode == GameMode.SETTINGS) {
             <div class="settings">
                 <div class="row">
-                    <div class="label">PLAYERS</div>
+                    <div class="label">Players:</div>
                     <div class="value">
                         <a href="@routes.SetController.removePlayer()" class="button-left highlight @if(controller.settings.playerCount > 1) { } else { disabled }">@{"<"}</a>
                         @{controller.settings.playerCount}
@@ -24,22 +44,22 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="label">EASY MODE</div>
+                    <div class="label">Easy Mode:</div>
                     <div class="value">
-                        <a href="@routes.SetController.switchEasy()" class="highlight" style="margin-left: 3.4em">@if(controller.settings.easy) { ON } else { OFF }</a>
+                        <a href="@routes.SetController.switchEasy()" class="highlight" style="margin-left: 3.4em">@if(controller.settings.easy) { On } else { Off }</a>
                     </div>
                 </div>
-                <div style="margin-top: 2em">
-                    <a href="@routes.SetController.startGame()" class="button">START GAME</a>
+                <div class="mt-2">
+                    <a class="btn btn-primary" href="@routes.SetController.startGame()" role="button">Start Game</a>
                 </div>
             </div>
         } else {
-            <div class="cards">
+            <div class="set-cards">
                 @for((card, idx) <- controller.game.tableCards.zipWithIndex) {
                         <!-- Checkbox Input für das Auswählen der Karte -->
-                    <input type="checkbox" id="card-@idx" class="card-checkbox">
+                    <input type="checkbox" id="card-@idx" class="set-card-checkbox">
                         <!-- Label wird mit dem Input verbunden und styled -->
-                    <label for="card-@idx" class="card @if(card.selected) { selected }">
+                    <label for="card-@idx" class="set-card @if(card.selected) { selected }">
                         @Html(setController.ansiToHtml(card.toString))
                     </label>
                 }
@@ -49,12 +69,12 @@
     <div class="bottom">
         @if(controller.settings.mode == GameMode.SETTINGS) {
             <div class="rules">
-                <a href="@routes.SetController.rules()">GAME RULES</a>
+                <a class="btn btn-secondary" href="@routes.SetController.rules()" role="button">Game Rules</a>
             </div>
         } else {
             <div class="player-selection">
                 @for(i <- 1 to controller.settings.playerCount) {
-                    <a href="@routes.SetController.selectPlayer(i)" class="@if(controller.game.selectedPlayer.exists(_.number == i)) { selected }">PLAYER @i: @controller.game.players(i - 1).sets.length</a>
+                    <a href="@routes.SetController.selectPlayer(i)" class="btn @if(controller.game.selectedPlayer.exists(_.number == i)) { btn-outline-primary }" role="button">PLAYER @i: @controller.game.players(i - 1).sets.length</a>
                 }
             </div>
             <div class="message">@controller.game.message</div>
