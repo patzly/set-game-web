@@ -1,16 +1,63 @@
-@(gameOrSettings: String, state: String)
+@import de.htwg.se.set.controller.IController
+@import de.htwg.se.set.model.GameMode
+
+@(controller: IController, setController: SetController,gameOrSettings: String, state: String)
 
 @main("SET Game") {
-    <div class="container">
-        <div>@Html(gameOrSettings)</div>
-        <p></p>
-        <div>@Html(state)</div>
-        <p></p>
-        @helper.form(action = routes.SetController.continue()) {
-            <label for="input">Input:</label>
-            <input type="text" id="input" name="input" required>
-            <button type="submit">Continue</button>
+    <div class="menu">
+        <a href="@routes.SetController.undo()" class="@if(controller.canUndo) { } else { disabled }">UNDO</a>
+        <a href="@routes.SetController.redo()" class="@if(controller.canRedo) { } else { disabled }">REDO</a>
+        @if(controller.settings.mode == GameMode.IN_GAME) {
+            <a href="@routes.SetController.addColumn()" class="@if(controller.game.selectedPlayer.isEmpty && (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) { } else { disabled }">ADD CARDS</a>
+            <a href="@routes.SetController.exit()">EXIT</a>
         }
-        <p><a href="@routes.SetController.rules()">View Game Rules</a></p>
+    </div>
+    <div class="main">
+        @if(controller.settings.mode == GameMode.SETTINGS) {
+            <div class="settings">
+                <div class="row">
+                    <div class="label">PLAYERS</div>
+                    <div class="value">
+                        <a href="@routes.SetController.removePlayer()" class="button-left highlight @if(controller.settings.playerCount > 1) { } else { disabled }">@{"<"}</a>
+                        @{controller.settings.playerCount}
+                        <a href="@routes.SetController.addPlayer()" class="button-right highlight @if(controller.settings.playerCount < 10) { } else { disabled }">@{">"}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="label">EASY MODE</div>
+                    <div class="value">
+                        <a href="@routes.SetController.switchEasy()" class="highlight" style="margin-left: 3.4em">@if(controller.settings.easy) { ON } else { OFF }</a>
+                    </div>
+                </div>
+                <div style="margin-top: 2em">
+                    <a href="@routes.SetController.startGame()" class="button">START GAME</a>
+                </div>
+            </div>
+        } else {
+            <div class="cards">
+                @for((card, idx) <- controller.game.tableCards.zipWithIndex) {
+                        <!-- Checkbox Input für das Auswählen der Karte -->
+                    <input type="checkbox" id="card-@idx" class="card-checkbox">
+                        <!-- Label wird mit dem Input verbunden und styled -->
+                    <label for="card-@idx" class="card @if(card.selected) { selected }">
+                        @Html(setController.ansiToHtml(card.toString))
+                    </label>
+                }
+            </div>
+        }
+    </div>
+    <div class="bottom">
+        @if(controller.settings.mode == GameMode.SETTINGS) {
+            <div class="rules">
+                <a href="@routes.SetController.rules()">GAME RULES</a>
+            </div>
+        } else {
+            <div class="player-selection">
+                @for(i <- 1 to controller.settings.playerCount) {
+                    <a href="@routes.SetController.selectPlayer(i)" class="@if(controller.game.selectedPlayer.exists(_.number == i)) { selected }">PLAYER @i: @controller.game.players(i - 1).sets.length</a>
+                }
+            </div>
+            <div class="message">@controller.game.message</div>
+        }
     </div>
 }
