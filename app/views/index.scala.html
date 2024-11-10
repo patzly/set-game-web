@@ -8,7 +8,7 @@
         <a href="@routes.SetController.undo()" class="@if(controller.canUndo) { } else { disabled }">UNDO</a>
         <a href="@routes.SetController.redo()" class="@if(controller.canRedo) { } else { disabled }">REDO</a>
         @if(controller.settings.mode == GameMode.IN_GAME) {
-            <a href="@routes.SetController.addColumn()" class="@if(controller.game.selectedPlayer.isEmpty && (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) { } else { disabled }">ADD CARDS</a>
+            <a href="@routes.SetController.addColumn()" class="@if( (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) { } else { disabled }">ADD CARDS</a>
             <a href="@routes.SetController.exit()">EXIT</a>
         }
     </div>
