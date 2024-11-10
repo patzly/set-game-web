@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const numRows = 3;
 
     cardCheckboxes().forEach(checkbox => checkbox.addEventListener("change", handleCheckboxChange));
+    toggleCheckboxes();
 
     playerLinks.forEach(link => {
         link.addEventListener("click", event => {
