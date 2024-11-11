@@ -62,6 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
         playerLinks.forEach(link => link.classList.remove("selected"));
         cardCheckboxes().forEach(checkbox => (checkbox.checked = false));
         toggleCheckboxes();
+        setTimeout(() => {
+            window.location.href = window.location.origin;
+        }, 100);  // Verzögerung von 100ms
+
+
     }
 
 
