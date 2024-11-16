@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
     function handleCheckboxChange() {
         const selectedCards = Array.from(cardCheckboxes())
             .filter(checkbox => checkbox.checked)
@@ -65,10 +64,5 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             window.location.href = window.location.origin;
         }, 100);  // Verzögerung von 100ms
-
-
     }
-
-
-
 });
