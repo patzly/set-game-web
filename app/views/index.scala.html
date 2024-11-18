@@ -5,11 +5,11 @@
 
 @main("SET Game") {
     <div class="menu">
-        <a href="@routes.SetController.undo()" class="@if(controller.canUndo) { } else { disabled }">UNDO</a>
-        <a href="@routes.SetController.redo()" class="@if(controller.canRedo) { } else { disabled }">REDO</a>
+        <a href="#" class="undo @if(controller.canUndo) { } else { disabled }">UNDO</a>
+        <a href="#" class="redo @if(controller.canRedo) { } else { disabled }">REDO</a>
         @if(controller.settings.mode == GameMode.IN_GAME) {
-            <a href="@routes.SetController.addColumn()" class="@if( (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) { } else { disabled }">ADD CARDS</a>
-            <a href="@routes.SetController.exit()">EXIT</a>
+            <a href="#" class="add-cards @if( (controller.game.columns < 6 || (controller.game.columns >= 6 && controller.game.deck.findSets(controller.game.tableCards).nonEmpty))) { } else { disabled }">ADD CARDS</a>
+            <a href="#" class="exit">EXIT</a>
         }
     </div>
     <div class="main">
@@ -18,19 +18,20 @@
                 <div class="row">
                     <div class="label">PLAYERS</div>
                     <div class="value">
-                        <a href="@routes.SetController.removePlayer()" class="button-left highlight @if(controller.settings.playerCount > 1) { } else { disabled }">@{"<"}</a>
-                        @{controller.settings.playerCount}
-                        <a href="@routes.SetController.addPlayer()" class="button-right highlight @if(controller.settings.playerCount < 10) { } else { disabled }">@{">"}</a>
+                            <!-- Entfernen von Spielern (Pfeil nach links) -->
+                        <a href="#" class="button-left highlight" id="remove-player" @if(controller.settings.playerCount > 1) { } else { class="disabled" }> @{"<"}</a>
+                        <span id="player-count">@{controller.settings.playerCount}</span>
+                        <a href="#" class="button-right highlight" id="add-player" @if(controller.settings.playerCount < 10) { } else { class="disabled" }> @{">"}</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="label">EASY MODE</div>
                     <div class="value">
-                        <a href="@routes.SetController.switchEasy()" class="highlight" style="margin-left: 3.4em">@if(controller.settings.easy) { ON } else { OFF }</a>
+                        <a href="#" class="mode-switch" style="margin-left: 3.4em">@if(controller.settings.easy) { ON } else { OFF }</a>
                     </div>
                 </div>
                 <div style="margin-top: 2em">
-                    <a href="@routes.SetController.startGame()" class="button">START GAME</a>
+                    <a href="#" class="start-button">START GAME</a>
                 </div>
             </div>
         } else {
@@ -53,10 +54,13 @@
             </div>
         } else {
             <div class="player-selection">
-                @for(i <- 1 to controller.settings.playerCount) {
-                    <a href="@routes.SetController.selectPlayer(i)" class="@if(controller.game.selectedPlayer.exists(_.number == i)) { selected }">PLAYER @i: @controller.game.players(i - 1).sets.length</a>
-                }
+            @for(i <- 1 to controller.settings.playerCount) {
+                <a href="#" class="player-link @if(controller.game.selectedPlayer.exists(_.number == i)) { selected }">
+            PLAYER @i: @controller.game.players(i - 1).sets.length
+                </a>
+            }
             </div>
+
             <div class="message">@controller.game.message</div>
         }
     </div>

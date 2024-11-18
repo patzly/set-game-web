@@ -9,6 +9,8 @@ import de.htwg.se.set.view.Tui
 import play.api.*
 import play.api.mvc.*
 
+import play.api.libs.json._
+
 import java.io.{ByteArrayOutputStream, PrintStream}
 import javax.inject.*
 
@@ -21,6 +23,10 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
 
   private val injector = Guice.createInjector(new SetModule)
   private val controller = injector.getInstance(classOf[IController])
+
+  def gameToJson(): Action[AnyContent] = Action {
+    Ok(controller.game.toJson)
+  }
 
   private def result =
     Ok(views.html.index(controller, this,ansiToHtml(controller.toString), ansiToHtml(controller.currentState)))
@@ -37,7 +43,9 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
 
   def startGame(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(StartGameAction())
-    result
+    Ok(Json.obj(
+      "success" -> true
+    ))
   }
 
   def goToPlayerCount(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
@@ -47,7 +55,10 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
 
   def switchEasy(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(SwitchEasyAction())
-    result
+    Ok(Json.obj(
+      "success" -> true,
+      "easy" -> controller.settings.easy
+    ))
   }
 
   def changePlayerCount(playerCount: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
@@ -57,46 +68,76 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
 
   def addPlayer(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount + 1))
-    result
+    Ok(Json.obj(
+      "success" -> true,
+      "message" -> s"Spielerzahl erhöht!",
+      "spielerzahl" -> JsNumber(controller.settings.playerCount)
+    ))
   }
 
   def removePlayer(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount - 1))
-    result
+    Ok(Json.obj(
+      "success" -> true,
+      "message" -> s"Spielerzahl verringert!",
+      "spielerzahl" -> JsNumber(controller.settings.playerCount)
+    ))
   }
+
+  import play.api.libs.json._
 
   def selectPlayer(number: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(SelectPlayerAction(number))
-    result
+
+    val response = Map("success" -> JsBoolean(true), "message" -> JsString(s"Player $number selected"))
+    Ok(Json.toJson(response))
   }
+
 
   def addColumn(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(AddColumnAction())
-    result
+    Ok(Json.obj(
+      "success" -> true
+    ))
   }
 
   def selectCards(coordinates: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    controller.handleAction(SelectCardsAction(coordinates.split("-").toList))
-    result
+    val coordinatesList = coordinates.split("-").toList
+    controller.handleAction(SelectCardsAction(coordinatesList))
+
+    Ok(Json.obj(
+      "success" -> true,
+      "message" -> s"Karten mit den Koordinaten ${coordinatesList.mkString(", ")} wurden ausgewählt"
+    ))
   }
+
 
   def exit(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(ExitAction())
-    result
+    Ok(Json.obj(
+      "success" -> true
+    ))
   }
 
   def undo(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(UndoAction())
-    result
+    Ok(Json.obj(
+      "success" -> true,
+      "canUndo" -> controller.canUndo
+    ))
   }
 
   def redo(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.handleAction(RedoAction())
-    result
+    Ok(Json.obj(
+      "success" -> true,
+      "canRedo" -> controller.canRedo
+    ))
   }
 
   def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.rules())
+
   }
 
   def ansiToHtml(text: String): String = {

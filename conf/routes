@@ -21,6 +21,8 @@ GET     /undo                       controllers.SetController.undo()
 GET     /redo                       controllers.SetController.redo()
 GET     /rules                      controllers.SetController.rules()
 
+GET     /json                       controllers.SetController.gameToJson()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

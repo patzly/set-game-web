@@ -93,7 +93,7 @@ a {
 .settings .row .value .button-left, .settings .row .value .button-right {
     margin: 0 1.5em;
 }
-.settings .button, .rules-container .button {
+.start-button, .rules-container .button {
     font-family: var(--text-font), monospace;
     font-weight: var(--text-weight);
     font-size: var(--text-size);
@@ -105,7 +105,7 @@ a {
     margin-top: 8em;
     transition: border-radius 0.3s;
 }
-.settings .button:hover, .rules-container .button:hover {
+.start-button:hover, .rules-container .button:hover {
     border-radius: 28px;
 }
 
@@ -155,9 +155,7 @@ a {
 .card:hover {
     box-shadow: rgba(50, 50, 93, 0.25) 0 6px 12px -2px, rgba(0, 0, 0, 0.3) 0 3px 7px -3px;
 }
-.card.selected {
-    border: 3px solid #ff6b6b;
-}
+
 
 .card-checkbox {
     display: none;
