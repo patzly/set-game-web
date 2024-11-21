@@ -6,22 +6,16 @@
 # An example controller showing a sample home page
 GET     /                           controllers.SetController.index()
 +nocsrf
-POST    /                           controllers.SetController.continue()
-GET     /startGame                  controllers.SetController.startGame()
-GET     /goToPlayerCount            controllers.SetController.goToPlayerCount()
-GET     /addPlayer                  controllers.SetController.addPlayer()
-GET     /removePlayer               controllers.SetController.removePlayer()
-GET     /switchEasy                 controllers.SetController.switchEasy()
-GET     /changePlayerCount/:count   controllers.SetController.changePlayerCount(count: Int)
-GET     /selectPlayer/:number        controllers.SetController.selectPlayer(number: Int)
-GET     /addColumn                  controllers.SetController.addColumn()
-GET     /selectCards/:coordinates   controllers.SetController.selectCards(coordinates: String)
-GET     /exit                       controllers.SetController.exit()
-GET     /undo                       controllers.SetController.undo()
-GET     /redo                       controllers.SetController.redo()
+
+
 GET     /rules                      controllers.SetController.rules()
 
+
+GET     /socket                  controllers.SetController.socket()
+
+
 GET     /json                       controllers.SetController.gameToJson()
+GET     /cards                       controllers.SetController.cards()
 
 
 # Map static resources from the /public folder to the /assets URL path

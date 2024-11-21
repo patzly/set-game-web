@@ -36,14 +36,6 @@
             </div>
         } else {
             <div class="cards">
-                @for((card, idx) <- controller.game.tableCards.zipWithIndex) {
-                        <!-- Checkbox Input für das Auswählen der Karte -->
-                    <input type="checkbox" id="card-@idx" class="card-checkbox">
-                        <!-- Label wird mit dem Input verbunden und styled -->
-                    <label for="card-@idx" class="card @if(card.selected) { selected }">
-                        @Html(setController.ansiToHtml(card.toString))
-                    </label>
-                }
             </div>
         }
     </div>
