@@ -11,61 +11,58 @@ class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: ICon
     socketManager ! Connect(out)
   }
 
-
   override def postStop(): Unit = {
     socketManager ! Disconnect(out)
   }
 
-
   override def receive: Receive = {
     case msg: JsValue =>
-
       (msg \ "action").asOpt[String] match {
         case Some("startGame") =>
           controller.handleAction(StartGameAction())
           send_success("Game started!")
           socketManager ! Broadcast(Json.obj("reload" -> true))
-
+          
         case Some("undo") =>
           controller.handleAction(UndoAction())
           send_success("Successfully rolled back!")
           socketManager ! Broadcast(Json.obj("canUndo" -> controller.canUndo))
           socketManager ! Broadcast(Json.obj("reload" -> true))
-
+          
         case Some("redo") =>
           controller.handleAction(RedoAction())
           send_success("Successfully rolled back!")
           socketManager ! Broadcast(Json.obj("canRedo" -> controller.canRedo))
           socketManager ! Broadcast(Json.obj("reload" -> true))
-
+          
         case Some("addColumn") =>
           controller.handleAction(AddColumnAction())
           send_success("AddColumAction started!")
           socketManager ! Broadcast(Json.obj("cardsChanged" -> true))
-
+          
         case Some("switchEasy") =>
           controller.handleAction(SwitchEasyAction())
           send_success("Mode switched!!")
           socketManager ! Broadcast(Json.obj("easy" -> controller.settings.easy))
           send_undo_redo()
-
+          
         case Some("addPlayer") =>
           controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount + 1))
           send_success("Playercount increased by one!")
           socketManager ! Broadcast(Json.obj("playercount" -> controller.settings.playerCount))
           send_undo_redo()
-
+          
         case Some("removePlayer") =>
           controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount - 1))
           send_success("Playercount decreased by one!")
           socketManager ! Broadcast(Json.obj("playercount" -> JsNumber(controller.settings.playerCount)))
           send_undo_redo()
-
+          
         case Some("exit") =>
           controller.handleAction(ExitAction())
           send_success("Successully left the game!")
           socketManager ! Broadcast(Json.obj("reload" -> true))
-
+          
         case Some("selectPlayer") =>
           val playerNumber = (msg \ "playerNumber").asOpt[String].getOrElse("1").toInt
           controller.handleAction(SelectPlayerAction(playerNumber))
@@ -83,7 +80,7 @@ class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: ICon
 
         case Some("getSettings") =>
           send_settings()
-
+          
         case Some(_) =>
           val jsonResponse = Json.obj(
             "status" -> "error",
@@ -95,11 +92,10 @@ class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: ICon
             "message" -> "Keine gültige Anfrage gesendet!"
 
           )
-
       }
   }
 
-  def send_success(msg: String): Unit = {
+  private def send_success(msg: String): Unit = {
     val jsonResponse = Json.obj(
       "success" -> true,
       "msg" -> msg
@@ -107,7 +103,7 @@ class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: ICon
     out ! jsonResponse
   }
 
-  def send_undo_redo(): Unit = {
+  private def send_undo_redo(): Unit = {
     socketManager ! Broadcast(
       Json.obj(
         "canUndo" -> controller.canUndo,
@@ -115,7 +111,7 @@ class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: ICon
       ))
   }
 
-  def send_settings(): Unit = {
+  private def send_settings(): Unit = {
     socketManager ! Broadcast(
       Json.obj(
         "canUndo" -> controller.canUndo,
@@ -124,13 +120,11 @@ class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: ICon
         "playercount" -> JsNumber(controller.settings.playerCount)))
   }
 
-  def send_game(): Unit = {
+  private def send_game(): Unit = {
     socketManager ! Broadcast(Json.obj(
       "selectedPlayer" -> JsNumber(controller.game.selectedPlayer.get.number),
       "cardsChanged" -> true,
-      "messageChanged" -> true, "message" -> controller.game.message,
-
-    )
-    )
+      "messageChanged" -> true, "message" -> controller.game.message
+    ))
   }
 }

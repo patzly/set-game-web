@@ -99,7 +99,6 @@ function handleSelectCards(selectedIndices) {
         coordinates: coordinatesParam
     }));
     console.log(coordinatesParam);
-
 }
 
 export function reset() {
@@ -143,6 +142,5 @@ export function updateMessage(message) {
         return;
     }
     message_element.textContent = message
-
 }
 

@@ -3,12 +3,10 @@ import {setupUIHandlers, toggleButtons, toggleCheckboxes} from './ui.js';
 import {cards, fetchCards, reset, selectPlayer, setCards, updateMessage} from './data.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-
     let canUndo = false;
     let canRedo = false;
     let easy = false;
     let playerCount = 0;
-
 
     const websocket = initializeWebSocket("ws://localhost:9000/socket");
 
@@ -30,9 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleButtons(canUndo, canRedo, easy, playerCount);
     }
 
-
     setupUIHandlers(websocket);
 
     fetchCards();
-
 });

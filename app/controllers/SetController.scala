@@ -1,24 +1,17 @@
 package controllers
 
 import com.google.inject.Guice
-import de.htwg.se.set.controller.{Event, IController}
-import de.htwg.se.set.controller.controller.*
-import de.htwg.se.set.{controller, module}
+import de.htwg.se.set.controller.IController
 import de.htwg.se.set.module.SetModule
-import de.htwg.se.set.util.Observer
-import de.htwg.se.set.view.Tui
-import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Props}
+import de.htwg.se.set.{controller, module}
+import org.apache.pekko.actor.{ActorSystem, Props}
+import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 import play.api.*
-import play.api.mvc.*
 import play.api.libs.json.*
-
-import java.io.{ByteArrayOutputStream, PrintStream}
-import javax.inject.*
 import play.api.libs.streams.ActorFlow
+import play.api.mvc.*
 
-import scala.concurrent.{ExecutionContext, Future}
-import org.apache.pekko.stream.Materializer
-import org.apache.pekko.stream.SystemMaterializer
+import javax.inject.*
 
 
 /**
@@ -27,7 +20,6 @@ import org.apache.pekko.stream.SystemMaterializer
  */
 @Singleton
 class SetController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
-
   private val injector = Guice.createInjector(new SetModule)
   private val controller = injector.getInstance(classOf[IController])
 
@@ -48,26 +40,20 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
     ))
   }
 
-
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index(controller, this, ansiToHtml(controller.toString), ansiToHtml(controller.currentState)))
   }
 
-
   def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.rules())
-
   }
 
-
-  def socket() = WebSocket.accept[JsValue, JsValue] { request =>
+  def socket(): WebSocket = WebSocket.accept[JsValue, JsValue] { request =>
     ActorFlow.actorRef { out =>
       println("Connect received")
       Props(new SetWebSocketActor(out, socketManager, controller))
-
     }
   }
-
 
   private def ansiToHtml(text: String): String = {
     val html = text
