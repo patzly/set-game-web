@@ -1,136 +1,136 @@
+
 package controllers
 
-import de.htwg.se.set.controller.controller.{AddColumnAction, ChangePlayerCountAction, ExitAction, RedoAction, SelectCardsAction, SelectPlayerAction, StartGameAction, SwitchEasyAction, UndoAction}
-import de.htwg.se.set.controller.{Event, IController}
+import controllers.AnsiConverter.toHtml
+import de.htwg.se.set.controller.IController
+import de.htwg.se.set.controller.controller.*
+import de.htwg.se.set.model.GameMode
 import org.apache.pekko.actor.{Actor, ActorRef}
-import play.api.libs.json.{JsNumber, JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 
 class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: IController) extends Actor {
 
-  override def preStart(): Unit = {
-    socketManager ! Connect(out)
-  }
+  override def preStart(): Unit = socketManager ! Connect(out)
 
-
-  override def postStop(): Unit = {
-    socketManager ! Disconnect(out)
-  }
-
+  override def postStop(): Unit = socketManager ! Disconnect(out)
 
   override def receive: Receive = {
     case msg: JsValue =>
-
       (msg \ "action").asOpt[String] match {
-        case Some("startGame") =>
-          controller.handleAction(StartGameAction())
-          send_success("Game started!")
-          socketManager ! Broadcast(Json.obj("reload" -> true))
-
-        case Some("undo") =>
-          controller.handleAction(UndoAction())
-          send_success("Successfully rolled back!")
-          socketManager ! Broadcast(Json.obj("canUndo" -> controller.canUndo))
-          socketManager ! Broadcast(Json.obj("reload" -> true))
-
-        case Some("redo") =>
-          controller.handleAction(RedoAction())
-          send_success("Successfully rolled back!")
-          socketManager ! Broadcast(Json.obj("canRedo" -> controller.canRedo))
-          socketManager ! Broadcast(Json.obj("reload" -> true))
-
-        case Some("addColumn") =>
-          controller.handleAction(AddColumnAction())
-          send_success("AddColumAction started!")
-          socketManager ! Broadcast(Json.obj("cardsChanged" -> true))
-
-        case Some("switchEasy") =>
-          controller.handleAction(SwitchEasyAction())
-          send_success("Mode switched!!")
-          socketManager ! Broadcast(Json.obj("easy" -> controller.settings.easy))
-          send_undo_redo()
-
-        case Some("addPlayer") =>
-          controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount + 1))
-          send_success("Playercount increased by one!")
-          socketManager ! Broadcast(Json.obj("playercount" -> controller.settings.playerCount))
-          send_undo_redo()
-
-        case Some("removePlayer") =>
-          controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount - 1))
-          send_success("Playercount decreased by one!")
-          socketManager ! Broadcast(Json.obj("playercount" -> JsNumber(controller.settings.playerCount)))
-          send_undo_redo()
-
-        case Some("exit") =>
-          controller.handleAction(ExitAction())
-          send_success("Successully left the game!")
-          socketManager ! Broadcast(Json.obj("reload" -> true))
-
-        case Some("selectPlayer") =>
-          val playerNumber = (msg \ "playerNumber").asOpt[String].getOrElse("1").toInt
-          controller.handleAction(SelectPlayerAction(playerNumber))
-          send_success(s"Player $playerNumber selected!")
-          socketManager ! Broadcast(Json.obj("selectedPlayer" -> JsNumber(playerNumber)))
-          send_game()
-
-        case Some("selectCards") =>
-          val coordinates = (msg \ "coordinates").asOpt[String].get
-          val coordinatesList = coordinates.split("-").toList
-          controller.handleAction(SelectCardsAction(coordinatesList))
-          send_success(s"Karten mit den Koordinaten ${coordinatesList.mkString(", ")} wurden ausgewählt")
-          //send_game()
-          socketManager ! Broadcast(Json.obj("reset" -> true))
-
-        case Some("getSettings") =>
-          send_settings()
-
-        case Some(_) =>
-          val jsonResponse = Json.obj(
-            "status" -> "error",
-            "message" -> "Keine gültige Anfrage gesendet!"
-          )
-        case None =>
-          val jsonResponse = Json.obj(
-            "status" -> "error",
-            "message" -> "Keine gültige Anfrage gesendet!"
-
-          )
-
+        case Some(action) => handleAction(action, msg)
+        case None => sendError("Keine gültige Anfrage gesendet!")
       }
   }
 
-  def send_success(msg: String): Unit = {
-    val jsonResponse = Json.obj(
-      "success" -> true,
-      "msg" -> msg
-    )
-    out ! jsonResponse
+  private val actionHandlers: Map[String, JsValue => Unit] = Map(
+    "startGame" -> { _ =>
+      controller.handleAction(StartGameAction())
+      sendSuccess("Game started!")
+      broadcastGameState(inGame = true)
+    },
+    "undo" -> { _ =>
+      controller.handleAction(UndoAction())
+      sendSuccess("Successfully rolled back!")
+      broadcastUndoRedo()
+      broadcastGameState(controller.settings.mode != GameMode.SETTINGS)
+    },
+    "redo" -> { _ =>
+      controller.handleAction(RedoAction())
+      sendSuccess("Successfully rolled forward!")
+      broadcastUndoRedo()
+      broadcastGameState(controller.settings.mode != GameMode.SETTINGS)
+    },
+    "addColumn" -> { _ =>
+      controller.handleAction(AddColumnAction())
+      sendSuccess("AddColumAction started!")
+      broadcastGame()
+    },
+    "switchEasy" -> { _ =>
+      controller.handleAction(SwitchEasyAction())
+      sendSuccess("Mode switched!")
+      broadcastSettings()
+      broadcastUndoRedo()
+    },
+    "addPlayer" -> { _ =>
+      controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount + 1))
+      sendSuccess("Player count increased!")
+      broadcastSettings()
+      broadcastUndoRedo()
+    },
+    "removePlayer" -> { _ =>
+      controller.handleAction(ChangePlayerCountAction(controller.settings.playerCount - 1))
+      sendSuccess("Player count decreased!")
+      broadcastSettings()
+      broadcastUndoRedo()
+    },
+    "exit" -> { _ =>
+      controller.handleAction(ExitAction())
+      sendSuccess("Successfully left the game!")
+      broadcastGameState(inGame = false)
+    },
+    "selectPlayer" -> { msg =>
+      val playerNumber = (msg \ "playerNumber").asOpt[Int].getOrElse(1)
+      controller.handleAction(SelectPlayerAction(playerNumber))
+      sendSuccess(s"Player $playerNumber selected!")
+      broadcast(Json.obj("selectedPlayer" -> playerNumber, "message" -> controller.game.message))
+    },
+    "selectCards" -> { msg =>
+      val coordinates = (msg \ "coordinates").asOpt[String].getOrElse("")
+      val coordinatesList = coordinates.split("-").toList
+      controller.handleAction(SelectCardsAction(coordinatesList))
+      sendSuccess(s"Karten mit den Koordinaten ${coordinatesList.mkString(", ")} wurden ausgewählt.")
+      broadcast(Json.obj("message" -> controller.game.message))
+      broadcastGame()
+    },
+    "getState" -> { _ =>
+      broadcastGameState(controller.settings.mode != GameMode.SETTINGS)
+    },
+    "getPlayer" -> { _ =>
+      broadcast(Json.obj("players" -> controller.game.players.map(_.toJson.as[JsObject])))
+    },
+    "getSettings" -> { _ =>
+      broadcastSettings()
+    }
+  )
+
+  private def handleAction(action: String, msg: JsValue): Unit = {
+    actionHandlers.get(action) match {
+      case Some(handler) => handler(msg)
+      case None => sendError("Keine gültige Anfrage gesendet!")
+    }
   }
 
-  def send_undo_redo(): Unit = {
-    socketManager ! Broadcast(
-      Json.obj(
-        "canUndo" -> controller.canUndo,
-        "canRedo" -> controller.canRedo,
-      ))
+  // Helper methods for broadcasting and responding
+  private def sendSuccess(msg: String): Unit =
+    out ! Json.obj("success" -> true, "msg" -> msg)
+
+  private def sendError(msg: String): Unit =
+    out ! Json.obj("status" -> "error", "message" -> msg)
+
+  private def broadcastGameState(inGame: Boolean): Unit = {
+    broadcast(Json.obj("inGame" -> inGame))
+    if (inGame) broadcastGame() else broadcastSettings()
   }
 
-  def send_settings(): Unit = {
-    socketManager ! Broadcast(
-      Json.obj(
-        "canUndo" -> controller.canUndo,
-        "canRedo" -> controller.canRedo,
-        "easy" -> controller.settings.easy,
-        "playercount" -> JsNumber(controller.settings.playerCount)))
-  }
+  private def broadcastGame(): Unit =
+    broadcast(Json.obj(
+      "message" -> controller.game.message,
+      "cards" -> controller.game.tableCards.map(card => card.toJson.as[JsObject] ++ Json.obj("name" -> toHtml(card.toString))),
+      "players" -> controller.game.players.map(_.toJson.as[JsObject])
+    ))
 
-  def send_game(): Unit = {
-    socketManager ! Broadcast(Json.obj(
-      "selectedPlayer" -> JsNumber(controller.game.selectedPlayer.get.number),
-      "cardsChanged" -> true,
-      "messageChanged" -> true, "message" -> controller.game.message,
+  private def broadcastSettings(): Unit =
+    broadcast(Json.obj(
+      "canUndo" -> controller.canUndo,
+      "canRedo" -> controller.canRedo,
+      "easy" -> controller.settings.easy,
+      "playercount" -> controller.settings.playerCount
+    ))
 
-    )
-    )
-  }
+  private def broadcastUndoRedo(): Unit =
+    broadcast(Json.obj("canUndo" -> controller.canUndo, "canRedo" -> controller.canRedo))
+
+  private def broadcast(json: JsObject): Unit = socketManager ! Broadcast(json)
+
+
 }

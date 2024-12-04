@@ -6,9 +6,9 @@ export function initializeWebSocket(url) {
 
         websocketInstance.onopen = () => {
             console.log("WebSocket connected");
-            websocketInstance.send(JSON.stringify({action: "getSettings"}));
+            websocketInstance.send(JSON.stringify({ action: "getSettings" }));
+        };
 
-        }
         websocketInstance.onerror = (error) => console.error("WebSocket error:", error);
     }
     return websocketInstance;

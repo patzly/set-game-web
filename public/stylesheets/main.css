@@ -1,14 +1,16 @@
 @font-face {
     font-family: 'Jost';
-    src: url('fonts/Jost-Regular.ttf');
+    src: url('/assets/fonts/Jost-Medium.ttf') format('truetype');
     font-weight: 400;
+    font-style: normal;
 }
-
 @font-face {
     font-family: 'Jost';
-    src: url('fonts/Jost-Medium.ttf');
+    src: url('/assets/fonts/Jost-Medium.ttf') format('truetype');
     font-weight: 500;
+    font-style: normal;
 }
+
 
 :root {
     --text-size: 18pt;
@@ -20,7 +22,7 @@
     --card-radius: 16px;
 }
 
-body {
+body, #app {
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -75,10 +77,10 @@ a {
     margin: 0.8em 0;
 }
 .settings .row .label {
-    text-align: end;
+    text-align: center;
 }
 .settings .row .value {
-    text-align: start;
+    text-align: center;
     margin-left: 0.5em;
 }
 .settings .row .value a {
@@ -102,7 +104,7 @@ a {
     border: 2px solid #000;
     border-radius: 16px;
     padding: 8px 16px;
-    margin-top: 8em;
+    margin-top: 10em;
     transition: border-radius 0.3s;
 }
 .start-button:hover, .rules-container .button:hover {
