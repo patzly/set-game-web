@@ -1,8 +1,12 @@
+/*
 import MenuComponent from './menuComponent.js';
-import {getWebSocket, initializeWebSocket} from "./websocket.js";
+import { getWebSocket, initializeWebSocket } from "../../setapp/src/websocket.js";
 import SettingsComponent from './settingsComponent.js';
 import cardsComponent from './cardListComponent.js';
 import BottomComponent from './bottomComponent.js';
+import OfflineComponent from './offlineComponent.js';  // Importiere das OfflineComponent
+ */
+
 
 export class Card {
     constructor(number, color, symbol, selected, name) {
@@ -14,6 +18,10 @@ export class Card {
     }
 }
 
+/*
+function isOnline() {
+    return navigator.onLine;
+}
 
 new Vue({
     el: '#app',
@@ -22,6 +30,7 @@ new Vue({
         SettingsComponent,
         cardsComponent,
         BottomComponent,
+        OfflineComponent,  // Füge OfflineComponent zu den Vue-Komponenten hinzu
     },
     data: {
         websocket: null,
@@ -34,11 +43,31 @@ new Vue({
         selectedCardIndices: [],
         selectedPlayer: null,
         players: [],
-        message: ""
+        message: "",
+        isOnline: navigator.onLine, // Zustand der Verbindung
     },
     created() {
+        // WebSocket initialisieren
         this.websocket = initializeWebSocket("ws://localhost:9000/socket");
         this.setupWebSocketHandlers();
+
+        // Überwache Netzwerkverbindung
+        window.addEventListener('online', this.handleOnline);
+
+
+        // Service Worker registrieren
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+        window.addEventListener('offline', this.handleOffline);
     },
     methods: {
         setupWebSocketHandlers() {
@@ -79,6 +108,14 @@ new Vue({
 
             this.selectedPlayer = player;
         },
+        handleOnline() {
+            this.isOnline = true;
+            console.log("Online");
+        },
+        handleOffline() {
+            this.isOnline = false;
+            console.log("Offline");
+        }
     },
     template: `
         <div id="app">
@@ -89,16 +126,17 @@ new Vue({
             />
             <div class="main">
                 <settings-component 
-                v-if="!gameState" 
-                :playerCount="playerCount" 
-                :easyMode="easyMode" 
-            />
-            <cards-component
-                v-if="gameState"
-                :cards="cards"
-                :selectedPlayer="selectedPlayer"
-            />
+                    v-if="!gameState" 
+                    :playerCount="playerCount" 
+                    :easyMode="easyMode" 
+                />
+                <cards-component
+                    v-if="gameState"
+                    :cards="cards"
+                    :selectedPlayer="selectedPlayer"
+                />
             </div>
+            
             <bottom-component
                 :gameState="gameState"
                 :playerCount="playerCount"
@@ -107,6 +145,10 @@ new Vue({
                 :message="message"
                 @select-player="handlePlayerSelection"
             />
+            <offline-component v-if="!isOnline"></offline-component>
         </div>
     `,
 });
+
+ */
+

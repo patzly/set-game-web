@@ -1,6 +1,6 @@
 import { getWebSocket } from "./websocket.js";
 
-export default Vue.component('menu-component', {
+export default {
     props: {
         canUndo: Boolean,
         canRedo: Boolean,
@@ -22,5 +22,5 @@ export default Vue.component('menu-component', {
             websocket.send(JSON.stringify({ action }));
         },
     },
-});
+};
 

@@ -40,7 +40,7 @@ export default {
                     <a href="#" 
                        class="button-left" 
                        :class="{ disabled: playerCount <= 1 }" 
-                       @click.prevent="removePlayer"><</a>
+                       @click.prevent="removePlayer"></a>
                     {{ playerCount }}
                     <a href="#" 
                        class="button-right" 

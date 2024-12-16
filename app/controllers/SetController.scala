@@ -43,14 +43,8 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
   }
 
 
-  def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index(controller, this, toHtml(controller.toString), toHtml(controller.currentState)))
-  }
 
 
-  def rules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.rules())
-  }
 
 
   def socket() = WebSocket.accept[JsValue, JsValue] { request =>
