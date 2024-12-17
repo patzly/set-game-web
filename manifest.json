@@ -1,7 +1,7 @@
 {
   "name": "Mein PWA-Projekt",
   "short_name": "PWA",
-  "start_url": "/",
+  "start_url": "/setapp/public/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
