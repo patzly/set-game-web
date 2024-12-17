@@ -4,14 +4,14 @@ module.exports = defineConfig({
   transpileDependencies: true,
 
   pwa: {
-    name: 'Meine PWA App',
-    themeColor: '#42b983', // Farbe der Statusleiste / des Themes
+    name: 'SET App',
+    themeColor: '#42b983',
     manifestOptions: {
-      short_name: 'MeinePWA',
+      short_name: 'SET',
       background_color: '#ffffff',
       display: 'standalone',
       scope: '/',
-      start_url: '/', // Start-URL, wenn die App als PWA gestartet wird
+      start_url: '/',
       icons: [
         {
           src: 'img/icons/android-chrome-192x192.png',
