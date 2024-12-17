@@ -6,7 +6,9 @@
         :can-undo="canUndo"
         :can-redo="canRedo"
         :gameState="gameState"
+        :gameId="gameId"
     />
+
     <div class="main">
       <home-component
           v-if="home"
@@ -30,12 +32,13 @@
       />
     </div>
     <bottom-component
-        :offlineMode="home"
         :gameState="gameState"
         :playerCount="playerCount"
         :selectedPlayer="selectedPlayer"
         :players="players"
         :message="message"
+        :home="home"
+        @end-session="handleEndSession"
         @select-player="handlePlayerSelection"
     />
     <offline-component
@@ -81,12 +84,19 @@ export default {
       home: true,
       websocketTimeout: null, // Timeout für WebSocket-Verbindung
       loading: false, // Ladezustand
+      gameId: "",
     };
   },
   methods: {
     setWebSocket(uniqueId) {
-      this.loading = true; // Ladezustand aktivieren
+      this.loading = true; //// Ladezustand aktivieren
+      this.isOnline = true;
+      if (this.websocket != null && this.websocket.open) {
+        this.websocket.close();
+      }
+
       this.websocket = initializeWebSocket(`ws://localhost:9000/socket/${uniqueId}`);
+      this.gameId = uniqueId;
       console.log("WebSocket updated in MainComponent:", this.websocket);
 
       this.websocketTimeout = setTimeout(() => {
@@ -95,7 +105,7 @@ export default {
           console.log("WebSocket konnte nicht innerhalb von 5 Sekunden verbunden werden. Offline-Modus aktiviert.");
           this.loading = false; // Ladezustand deaktivieren
         }
-      }, 50); // 5 Sekunden
+      }, 100); // 5 Sekunden
 
         this.setupWebSocketHandlers();
 
@@ -104,6 +114,7 @@ export default {
       // Setzt den offlineMode auf false
       this.home = true;
       this.isOnline = true;
+      location.reload();
     },
     setupWebSocketHandlers() {
       if (!this.websocket) return;
@@ -115,6 +126,7 @@ export default {
           this.websocketTimeout = null;
         }
         this.isOnline = true; // WebSocket erfolgreich verbunden, Offline-Modus deaktivieren
+        this.websocket.send(JSON.stringify({ action: "getState" }));
         this.loading = false; // Ladezustand deaktivieren
         console.log("WebSocket-Verbindung erfolgreich.");
       };
@@ -145,6 +157,7 @@ export default {
       this.websocket.onclose = () => {
         console.warn("WebSocket closed. Game may be disconnected.");
         this.websocket = null;
+        this.isOnline = true;
         this.loading = false; // Ladezustand deaktivieren
       };
     },
@@ -157,6 +170,13 @@ export default {
       console.log("Joined game locally.");
       this.home = false;
       this.setWebSocket(uniqueId);
+    },
+    handleEndSession() {
+      this.websocket.close();
+      this.websocket = null;
+      this.home = true;
+      location.reload();
+
     },
     handlePlayerSelection(player) {
       if (this.websocket) {

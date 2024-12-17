@@ -1,3 +1,5 @@
+
+
 @font-face {
     font-family: 'Jost';
     src: url('./Jost-Medium.ttf') format('truetype');
@@ -41,6 +43,60 @@ a {
     border-bottom: 2px solid #000;
     padding-left: 0.6em;
 }
+
+.menu .game-id {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding: 0.2em 0.4em; /* Reduzierte Polsterung für ein kleineres Element */
+    font-size: calc(var(--text-size) * 0.8); /* Kleinere Schriftgröße */
+    color: #000; /* Beibehaltung der Textfarbe */
+    background-color: transparent; /* Hintergrundfarbe entfernt */
+    border: none; /* Border entfernt */
+    box-shadow: none; /* Schatten entfernt */
+    transition: none; /* Übergangseffekte entfernt */
+}
+
+.menu .game-id label {
+    margin-right: 0.3em; /* Reduzierter Abstand für kompakteres Design */
+    font-size: inherit; /* Gleiche Schriftgröße wie das übergeordnete Element */
+}
+
+.menu .game-id input {
+    font-family: var(--text-font);
+    font-size: inherit; /* Gleiche Schriftgröße wie das übergeordnete Element */
+    font-weight: var(--text-weight);
+    padding: 0.2em 0.4em; /* Kleinere Polsterung */
+    border: 1px solid #ccc; /* Minimaler Rahmen für Eingabe */
+    border-radius: var(--card-radius); /* Abgerundete Ecken bleiben */
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.menu .game-id input:hover {
+    border-color: #060488;
+}
+.menu .game-id input:active {
+    cursor: grabbing;
+}
+
+
+.menu .game-id input:focus {
+    outline: none;
+    border-color: #da0100;
+}
+
+.menu .game-id input[readonly] {
+    background-color: #f0f0f0;
+    cursor: copy;
+}
+
+.menu .game-id input[readonly]:hover {
+    background-color: #f0f0f0;
+}
+
+
 .menu a {
     padding: 0.3em 0.6em;
     font-family: var(--text-font), monospace;
@@ -129,6 +185,19 @@ a {
 .rules a:hover {
     color: #da0100;
 }
+
+.end-session {
+    padding-bottom: 1em;
+    text-align: center;
+}
+.end-session a {
+    color: #000;
+    transition: color 0.3s;
+}
+.end-session a:hover {
+    color: #da0100;
+}
+
 
 .cards {
     display: inline-grid;

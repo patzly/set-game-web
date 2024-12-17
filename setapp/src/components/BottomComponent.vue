@@ -1,9 +1,12 @@
 <template>
   <div class="bottom">
-    <div v-if="!gameState" class="rules">
+    <div v-if="home" class="rules">
       <a href="/rules">GAME RULES</a>
     </div>
-    <div v-else class="player-selection">
+    <div v-if="!gameState && !home" class="end-session">
+      <a href="#" @click.prevent="endSession()">END SESSION</a>
+    </div>
+    <div v-if="gameState" class="player-selection">
       <div v-for="player in players" :key="player.number">
         <a href="#"
            :class="{'selected': selectedPlayer && selectedPlayer.number === player.number}"
@@ -40,11 +43,18 @@ export default {
     message: {
       type: String,
       required: true,
+    },
+    home: {
+      type: Boolean,
+      required: true,
     }
   },
   methods: {
     selectPlayer(player) {
       this.$emit('select-player', player);  // We send the 'select-player' event up
+    },
+    endSession() {
+      this.$emit('end-session')// We send the 'select-player' event up
     }
   }
 };
