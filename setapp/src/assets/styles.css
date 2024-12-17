@@ -271,3 +271,87 @@ input[type="text"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* Game Options Component */
+.game-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+    font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
+}
+
+.game-options .row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+    width: 100%;
+    max-width: 500px;
+    align-items: center;
+}
+
+.game-options .create-game {
+    width: 250px; /* Etwas schmaler als vorher */
+    padding: 12px 0;
+    text-align: center;
+    font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
+    color: #da0100;
+    background-color: #f4f1b4;
+    border: 2px solid #000;
+    border-radius: var(--card-radius);
+    cursor: pointer;
+    transition: border-radius 0.3s, background-color 0.3s;
+}
+
+.game-options .create-game:hover {
+    border-radius: 28px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Flexbox für Input-Feld und Join-Button in einer Zeile */
+.game-options .join-game-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    justify-content: center;
+    width: 100%;
+}
+
+.game-options .game-id-input {
+    font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
+    padding: 8px 12px;
+    width: 200px; /* Breite des Input-Felds */
+    border: 2px solid #ccc;
+    border-radius: var(--card-radius);
+    transition: border-color 0.3s;
+}
+
+.game-options .game-id-input:focus {
+    outline: none;
+    border-color: #060488;
+}
+
+.game-options .join-game {
+    font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
+    color: #060488;
+    background-color: #f4f1b4;
+    border: 2px solid #000;
+    border-radius: var(--card-radius);
+    padding: 8px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.game-options .join-game:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

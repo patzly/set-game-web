@@ -6,11 +6,11 @@
 # An example controlle
 
 
-GET     /socket                  controllers.SetController.socket()
+GET     /socket/:gameId          controllers.SetController.socket(gameId: String)
 
 
-GET     /json                       controllers.SetController.gameToJson()
-GET     /cards                       controllers.SetController.cards()
+GET     /json/:gameId                        controllers.SetController.gameToJson(gameId: String)
+GET     /cards/:gameId                        controllers.SetController.cards(gameId: String)
 
 GET  /sw.js  controllers.Assets.at(path="/public", file="sw.js")
 

@@ -42,34 +42,26 @@ export default {
   },
   methods: {
     addPlayer() {
-      if (!this.offlineMode) {
         const websocket = getWebSocket();
         if (websocket.readyState === WebSocket.OPEN) {
-          // WebSocket senden
           websocket.send(JSON.stringify({ action: "addPlayer" }));
         } else {
           console.warn("WebSocket offline: Spieleranzahl wird nur lokal aktualisiert.");
-          // Nur lokal aktualisieren, wenn WebSocket offline ist
-          this.$emit("update:playerCount", this.playerCount + 1);
+
         }
-      } else {
-        this.$emit("update:playerCount", this.playerCount + 1);
       }
-    },
+    ,
     removePlayer() {
-      if (!this.offlineMode) {
+
       const websocket = getWebSocket();
       if (websocket.readyState === WebSocket.OPEN) {
         // WebSocket senden
         websocket.send(JSON.stringify({ action: "removePlayer" }));
       } else {
         console.warn("WebSocket offline: Spieleranzahl wird nur lokal aktualisiert.");
-        // Nur lokal aktualisieren, wenn WebSocket offline ist
-        this.$emit("update:playerCount", this.playerCount - 1);
+
       }
-    } else {
-        this.$emit("update:playerCount", this.playerCount - 1);
-      }
+
       },
     toggleEasyMode() {
       const websocket = getWebSocket();

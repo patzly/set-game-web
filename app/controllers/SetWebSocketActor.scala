@@ -8,11 +8,11 @@ import de.htwg.se.set.model.GameMode
 import org.apache.pekko.actor.{Actor, ActorRef}
 import play.api.libs.json.{JsObject, JsValue, Json}
 
-class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: IController) extends Actor {
+class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: IController, gameId: String) extends Actor {
 
-  override def preStart(): Unit = socketManager ! Connect(out)
+  override def preStart(): Unit = socketManager ! Connect(out, gameId)
 
-  override def postStop(): Unit = socketManager ! Disconnect(out)
+  override def postStop(): Unit = socketManager ! Disconnect(out, gameId)
 
   override def receive: Receive = {
     case msg: JsValue =>
@@ -130,7 +130,7 @@ class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: ICon
   private def broadcastUndoRedo(): Unit =
     broadcast(Json.obj("canUndo" -> controller.canUndo, "canRedo" -> controller.canRedo))
 
-  private def broadcast(json: JsObject): Unit = socketManager ! Broadcast(json)
+  private def broadcast(json: JsObject): Unit = socketManager ! Broadcast(json, gameId: String)
 
 
 }
