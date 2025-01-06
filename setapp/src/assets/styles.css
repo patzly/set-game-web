@@ -127,7 +127,7 @@ a {
 .settings .row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    margin: 0.8em 0;
+    margin: 1.5em 0;
 }
 .settings .row .label {
     text-align: center;
@@ -203,6 +203,19 @@ a {
     gap: var(--card-gap);
 }
 
+.card-container {
+    position: relative;
+    width: var(--card-width);
+    height: var(--card-height);
+}
+.card-container > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--card-width);
+    height: var(--card-height);
+}
+
 .card {
     width: var(--card-width);
     height: var(--card-height);
@@ -224,6 +237,16 @@ a {
     box-shadow: rgba(50, 50, 93, 0.25) 0 6px 12px -2px, rgba(0, 0, 0, 0.3) 0 3px 7px -3px;
 }
 
+.card-canvas {
+    width: var(--card-width);
+    height: var(--card-height);
+    display: flex;
+    left: 2px !important;
+    top: 2px !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 .card-checkbox {
     display: none;
@@ -371,12 +394,10 @@ input[type="text"] {
     border: 2px solid #000;
     border-radius: var(--card-radius);
     cursor: pointer;
-    transition: border-radius 0.3s, background-color 0.3s;
+    transition: border-radius 0.3s;
 }
-
 .game-options .create-game:hover {
     border-radius: 28px;
-    background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Flexbox für Input-Feld und Join-Button in einer Zeile */
@@ -415,9 +436,9 @@ input[type="text"] {
     padding: 8px 16px;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: border-radius 0.3s;
 }
 
 .game-options .join-game:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 32px;
 }

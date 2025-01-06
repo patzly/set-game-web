@@ -1,6 +1,9 @@
 <template>
   <div class="cards">
     <div v-for="(card, index) in localCards" :key="index" class="card-container">
+      <canvas
+          class="card-canvas"
+          :id="'card-canvas-' + index" />
       <input
           type="checkbox"
           :id="'card-' + index"
