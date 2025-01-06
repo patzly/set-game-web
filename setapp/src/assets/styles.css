@@ -45,55 +45,52 @@ a {
 }
 
 .menu .game-id {
+    font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
     display: flex;
     align-items: center;
     margin-left: auto;
     padding: 0.2em 0.4em; /* Reduzierte Polsterung für ein kleineres Element */
-    font-size: calc(var(--text-size) * 0.8); /* Kleinere Schriftgröße */
     color: #000; /* Beibehaltung der Textfarbe */
-    background-color: transparent; /* Hintergrundfarbe entfernt */
+    background-color: transparent;
     border: none; /* Border entfernt */
     box-shadow: none; /* Schatten entfernt */
     transition: none; /* Übergangseffekte entfernt */
 }
 
 .menu .game-id label {
+    font-family: var(--text-font), monospace;
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
     margin-right: 0.3em; /* Reduzierter Abstand für kompakteres Design */
-    font-size: inherit; /* Gleiche Schriftgröße wie das übergeordnete Element */
 }
 
 .menu .game-id input {
-    font-family: var(--text-font);
-    font-size: inherit; /* Gleiche Schriftgröße wie das übergeordnete Element */
+    width: 6em;
+    font-family: var(--text-font), monospace;
     font-weight: var(--text-weight);
-    padding: 0.2em 0.4em; /* Kleinere Polsterung */
-    border: 1px solid #ccc; /* Minimaler Rahmen für Eingabe */
+    font-size: var(--text-size);
+    padding: 0;
+    border: none; /* Minimaler Rahmen für Eingabe */
     border-radius: var(--card-radius); /* Abgerundete Ecken bleiben */
-    background-color: #fff;
+    background-color: transparent;
     cursor: pointer;
-    transition: border-color 0.3s, background-color 0.3s;
 }
 
-.menu .game-id input:hover {
-    border-color: #060488;
-}
 .menu .game-id input:active {
-    cursor: grabbing;
-}
-
-
-.menu .game-id input:focus {
-    outline: none;
-    border-color: #da0100;
-}
-
-.menu .game-id input[readonly] {
-    background-color: #f0f0f0;
     cursor: copy;
 }
-
+.menu .game-id input:focus {
+    outline: none;
+    border-color: transparent;
+}
+.menu .game-id input[readonly] {
+    background-color: transparent;
+    cursor: copy;
+}
 .menu .game-id input[readonly]:hover {
-    background-color: #f0f0f0;
+    background-color: transparent;
 }
 
 
