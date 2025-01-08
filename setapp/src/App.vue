@@ -147,7 +147,7 @@ export default {
         this.message = data.message ?? this.message;
 
         if (data.cards) {
-          this.cards = data.cards.map(c => new Card(c.number, c.color, c.symbol, c.selected, c.name));
+          this.cards = data.cards.map(c => new Card(c.number, c.color, c.shading, c.symbol, c.selected, c.name));
         }
         if (data.players) {
           this.players = data.players;

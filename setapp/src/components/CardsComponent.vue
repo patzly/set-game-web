@@ -2,8 +2,8 @@
   <div class="cards">
     <div v-for="(card, index) in localCards" :key="index" class="card-container">
       <canvas
-          class="card-canvas"
-          :id="'card-canvas-' + index" />
+          :class="{ card: true, selected: card.selected ?? false }"
+          :ref="'cardCanvas-' + index" />
       <input
           type="checkbox"
           :id="'card-' + index"
@@ -12,11 +12,7 @@
           :disabled="!isPlayerSelected"
           @change="handleCheckboxChange(index)"
       />
-      <label
-          :for="'card-' + index"
-          :class="{ card: true, selected: card.selected ?? false }"
-          v-html="card.name">
-      </label>
+
     </div>
   </div>
 </template>
@@ -47,6 +43,47 @@ export default {
     };
   },
   methods: {
+    renderCard(canvasId) {
+      const canvasArray = this.$refs[`cardCanvas-${canvasId}`];
+
+      if (Array.isArray(canvasArray) && canvasArray[0]?.tagName === "CANVAS") {
+        const canvas = canvasArray[0];
+        const card = this.localCards[canvasId]
+        const ctx = canvas.getContext('2d');
+
+        if (ctx) {
+          // card.symbol === "DIAMOND"
+          // card.symbol === "SQUIGGLE"
+          // card.symbol === "OVAL"
+          // card.color === "RED"
+          // card.color === "GREEN"
+          // card.color === "BLUE"
+          // card.shading === "OUTLINED"
+          // card.shading === "STRIPED"
+          // card.shading === "SOLID"
+          // card.number === 1
+
+          if (card.color === "GREEN") {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          } else if (card.color === "BLUE") {
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          } else if (card.color === "RED") {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
+
+        } else {
+          console.warn(`Canvas context for ID ${canvasId} could not be retrieved.`);
+        }
+      } else {
+        console.warn(`Canvas with ID ${canvasId} is not valid or not found.`);
+      }
+    }
+
+
+    ,
     handleCheckboxChange(index) {
       if (!this.selectedPlayer) {
         return;
@@ -100,14 +137,19 @@ export default {
   },
 
   watch: {
-    // Wenn sich die Prop `cards` ändert, aktualisiere die lokale Kopie
     cards: {
       immediate: true,
       handler(newCards) {
         this.localCards = [...newCards];
+        this.$nextTick(() => {
+          this.localCards.forEach((_, index) => {
+            this.renderCard(index);
+          });
+        });
       },
     },
-  },
+  }
+,
 };
 </script>
 

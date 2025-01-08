@@ -9,9 +9,10 @@ import OfflineComponent from './offlineComponent.js';  // Importiere das Offline
 
 
 export class Card {
-    constructor(number, color, symbol, selected, name) {
+    constructor(number, color, shading, symbol, selected, name) {
         this.number = number;
         this.color = color;
+        this.shading = shading;
         this.symbol = symbol;
         this.selected = selected;
         this.name = name;
