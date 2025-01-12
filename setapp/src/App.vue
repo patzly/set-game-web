@@ -1,65 +1,84 @@
 <template>
   <div id="app">
-    <menu-component
-        v-if="!home"
-        :offlineMode="home"
-        :can-undo="canUndo"
-        :can-redo="canRedo"
-        :gameState="gameState"
-        :gameId="gameId"
-    />
 
-    <div class="main">
-      <home-component
-          v-if="home"
+      <menu-component
+          v-if="!home"
           :offlineMode="home"
-          @updateWebSocket="setWebSocket"
-          @localCreateGame="handleLocalCreateGame"
-          @localJoinGame="handleLocalJoinGame"
+          :can-undo="canUndo"
+          :can-redo="canRedo"
+          :gameState="gameState"
+          :gameId="gameId"
       />
-      <settings-component
-          v-if="!gameState && !home"
-          :offlineMode="home"
+
+      <div class="main">
+        <LoginComponent
+            v-if="!user && showLogin"
+            @switch-to-register="showRegisterComponent"
+            :onAuthenticated="handleAuthenticated"
+        />
+        <RegisterComponent
+            v-if="!user && !showLogin"
+            @switch-to-login="showLoginComponent"
+            :onAuthenticated="handleAuthenticated"
+        />
+        <home-component
+            v-if="home && user"
+            :offlineMode="home"
+            @updateWebSocket="setWebSocket"
+            @localCreateGame="handleLocalCreateGame"
+            @localJoinGame="handleLocalJoinGame"
+        />
+        <settings-component
+            v-if="!gameState && !home"
+            :offlineMode="home"
+            :playerCount="playerCount"
+            :easyMode="easyMode"
+            @update:playerCount="playerCount = $event"
+        />
+        <cards-component
+            v-if="gameState"
+            :offlineMode="home"
+            :cards="cards"
+            :selectedPlayer="selectedPlayer"
+        />
+      </div>
+      <bottom-component
+          :gameState="gameState"
           :playerCount="playerCount"
-          :easyMode="easyMode"
-          @update:playerCount="playerCount = $event"
-      />
-      <cards-component
-          v-if="gameState"
-          :offlineMode="home"
-          :cards="cards"
           :selectedPlayer="selectedPlayer"
+          :players="players"
+          :message="message"
+          :home="home"
+          @end-session="handleEndSession"
+          @select-player="handlePlayerSelection"
       />
-    </div>
-    <bottom-component
-        :gameState="gameState"
-        :playerCount="playerCount"
-        :selectedPlayer="selectedPlayer"
-        :players="players"
-        :message="message"
-        :home="home"
-        @end-session="handleEndSession"
-        @select-player="handlePlayerSelection"
-    />
-    <offline-component
-        v-if="!isOnline && !home"
-        :disableOfflineMode="disableOfflineMode"
-    />
+      <offline-component
+          v-if="!isOnline && !home"
+          :disableOfflineMode="disableOfflineMode"
+      />
+
   </div>
 </template>
+
 <script>
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
+import LoginComponent from "@/components/LoginComponent.vue";
+import RegisterComponent from "@/components/RegisterComponent.vue";
 import MenuComponent from './components/MenuComponent.vue';
 import SettingsComponent from './components/SettingsComponent.vue';
 import CardsComponent from './components/CardsComponent.vue';
 import BottomComponent from './components/BottomComponent.vue';
 import OfflineComponent from './components/OfflineComponent.vue';
-import { Card } from "../../public/javascripts/setVue";
 import HomeComponent from "@/components/HomeComponent.vue";
 import { initializeWebSocket } from "../../public/javascripts/websocket";
+import { Card } from "../../public/javascripts/setVue";
 
 export default {
   name: 'MainComponent',
   components: {
+    LoginComponent,
+    RegisterComponent,
     MenuComponent,
     HomeComponent,
     SettingsComponent,
@@ -69,6 +88,8 @@ export default {
   },
   data() {
     return {
+      user: null, // Authentifizierter Benutzer
+      showLogin: true, // Anzeigen der Login- oder Registrierungsansicht
       websocket: null,
       canUndo: false,
       canRedo: false,
@@ -88,6 +109,15 @@ export default {
     };
   },
   methods: {
+    handleAuthenticated(user) {
+      this.user = user; // Benutzer nach erfolgreicher Authentifizierung setzen
+    },
+    showRegisterComponent() {
+      this.showLogin = false;
+    },
+    showLoginComponent() {
+      this.showLogin = true;
+    },
     setWebSocket(uniqueId) {
       this.loading = true; //// Ladezustand aktivieren
       this.isOnline = true;
@@ -107,11 +137,9 @@ export default {
         }
       }, 100); // 5 Sekunden
 
-        this.setupWebSocketHandlers();
-
+      this.setupWebSocketHandlers();
     },
     disableOfflineMode() {
-      // Setzt den offlineMode auf false
       this.home = true;
       this.isOnline = true;
       location.reload();
@@ -120,14 +148,13 @@ export default {
       if (!this.websocket) return;
 
       this.websocket.onopen = () => {
-        // Wenn die Verbindung geöffnet wurde, stoppen wir den Timeout
         if (this.websocketTimeout) {
           clearTimeout(this.websocketTimeout);
           this.websocketTimeout = null;
         }
-        this.isOnline = true; // WebSocket erfolgreich verbunden, Offline-Modus deaktivieren
+        this.isOnline = true;
         this.websocket.send(JSON.stringify({ action: "getState" }));
-        this.loading = false; // Ladezustand deaktivieren
+        this.loading = false;
         console.log("WebSocket-Verbindung erfolgreich.");
       };
 
@@ -158,7 +185,7 @@ export default {
         console.warn("WebSocket closed. Game may be disconnected.");
         this.websocket = null;
         this.isOnline = true;
-        this.loading = false; // Ladezustand deaktivieren
+        this.loading = false;
       };
     },
     handleLocalCreateGame(uniqueId) {
@@ -176,7 +203,6 @@ export default {
       this.websocket = null;
       this.home = true;
       location.reload();
-
     },
     handlePlayerSelection(player) {
       if (this.websocket) {
@@ -187,7 +213,11 @@ export default {
       }
       this.selectedPlayer = player;
     }
+  },
+  created() {
+    onAuthStateChanged(auth, (user) => {
+      this.user = user;
+    });
   }
 };
 </script>
-
