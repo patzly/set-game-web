@@ -1,3 +1,5 @@
+
+
 name := """SET Game Web"""
 organization := "pzme"
 version := "1.0-SNAPSHOT"
@@ -6,7 +8,11 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "3.3.1"
 
+javaOptions ++= Seq("-Xmx256m", "-Xss512k", "-Dfile.encoding=UTF-8")
+fork := true
+
 // Dependencies
+
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
