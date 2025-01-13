@@ -22,7 +22,7 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
 
   implicit val system: ActorSystem = ActorSystem("MyActorSystem")
   implicit val materializer: Materializer = SystemMaterializer(system).materializer
-  private val socketManager = system.actorOf(Props(new SocketManager()), "SocketManager")
+  private val socketManager = system.actorOf(Props(new SocketManager(controllersMap)), "SocketManager")
 
   def gameToJson(gameId: String): Action[AnyContent] = Action {
     val gameController = getOrCreateController(gameId)
@@ -42,12 +42,10 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
   def socket(gameId: String) = WebSocket.accept[JsValue, JsValue] { request =>
     ActorFlow.actorRef { out =>
       println(s"Connect received for gameId: $gameId")
-      // Hole den spezifischen IController für das Spiel
-      val gameController = getOrCreateController(gameId)  // Stelle sicher, dass hier der Controller zurückgegeben wird, kein Map
+      val gameController = getOrCreateController(gameId)
       Props(new SetWebSocketActor(out, socketManager, gameController, gameId))
     }
   }
-
 
   private def getOrCreateController(gameId: String): IController = {
     controllersMap.getOrElseUpdate(gameId, {
