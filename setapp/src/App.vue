@@ -95,7 +95,7 @@ export default {
         this.websocket.close();
       }
 
-      this.websocket = initializeWebSocket(`ws://localhost:9000/socket/${uniqueId}`);
+      this.websocket = initializeWebSocket(`ws://setapp-bf0783a743ff.herokuapp.com/socket/${uniqueId}`);
       this.gameId = uniqueId;
       console.log("WebSocket updated in MainComponent:", this.websocket);
 
