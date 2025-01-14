@@ -15,5 +15,8 @@ RUN apt-get update && apt-get install -y curl unzip && \
 # Entpacke die Distribution
 RUN unzip target/universal/*.zip
 
+# Dokumentiere den offenen Port
+EXPOSE 9000
+
 # Startbefehl setzen
 CMD ["./bin/set-game-web", "-Dplay.http.secret.key=${PLAY_SECRET}", "-Dhttp.port=${PORT}"]
