@@ -15,6 +15,10 @@ RUN apt-get update && apt-get install -y curl unzip && \
 # Entpacke die Distribution
 RUN unzip target/universal/*.zip
 
+# Setze feste Werte für die Umgebungsvariablen
+ENV PLAY_SECRET="aebDC3+kl/BqjsjnuND+UUbNJH0BhlyrJnSJEUISaZw="
+ENV PORT=9000
+
 # Dokumentiere den offenen Port
 EXPOSE 9000
 
