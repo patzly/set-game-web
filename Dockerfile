@@ -17,12 +17,8 @@ RUN /usr/local/sbt/bin/sbt clean dist
 # Distribution entpacken
 RUN unzip -q target/universal/*.zip -d /app
 
-# Setze Umgebungsvariablen
-ENV PLAY_SECRET="aebDC3+kl/BqjsjnuND+UUbNJH0BhlyrJnSJEUISaZw="
-ENV PORT=9000
-
 # Dokumentiere den offenen Port
-EXPOSE 9000
+EXPOSE 1000
 
 # Starte die Anwendung
-CMD ["/app/set-game-web-1.0-SNAPSHOT/bin/set-game-web", "-Dplay.http.secret.key=${PLAY_SECRET}", "-Dhttp.port=${PORT}"]
+CMD ["/app/set-game-web-1.0-SNAPSHOT/bin/set-game-web", "-Dhttp.port=${PORT}"]
