@@ -1,9 +1,19 @@
+# Nutze ein OpenJDK-Image
 FROM openjdk:21-jdk-slim
+
+# Arbeitsverzeichnis setzen
 WORKDIR /app
 
-# Kopiere und entpacke die Distribution
-COPY target/universal/set-game-web-1.0-SNAPSHOT.zip /app/
-RUN apt-get update && apt-get install -y unzip && unzip set-game-web-1.0-SNAPSHOT.zip
+# Kopiere den Projektinhalt ins Image
+COPY . .
 
-# Setze den Startbefehl
-CMD ["./set-game-web-1.0-SNAPSHOT/bin/set-game-web", "-Dplay.http.secret.key=${PLAY_SECRET}", "-Dhttp.port=${PORT}"]
+# Installiere sbt und erstelle die Distribution
+RUN apt-get update && apt-get install -y curl unzip && \
+    curl -L https://github.com/sbt/sbt/releases/download/v1.9.6/sbt-1.9.6.tgz | tar -xz -C /usr/local && \
+    /usr/local/sbt/bin/sbt clean dist
+
+# Entpacke die Distribution
+RUN unzip target/universal/*.zip
+
+# Startbefehl setzen
+CMD ["./bin/set-game-web", "-Dplay.http.secret.key=${PLAY_SECRET}", "-Dhttp.port=${PORT}"]
