@@ -1,26 +1,28 @@
-# Nutze ein OpenJDK-Image
+# Nutze ein OpenJDK 21 Image
 FROM openjdk:21-jdk-slim
 
 # Arbeitsverzeichnis setzen
 WORKDIR /app
 
-# Kopiere den Projektinhalt ins Image
+# Abhängigkeiten installieren
+RUN apt-get update && apt-get install -y curl unzip && \
+    curl -L https://github.com/sbt/sbt/releases/download/v1.9.6/sbt-1.9.6.tgz | tar -xz -C /usr/local
+
+# Projektdateien kopieren
 COPY . .
 
-# Installiere sbt und erstelle die Distribution
-RUN apt-get update && apt-get install -y curl unzip && \
-    curl -L https://github.com/sbt/sbt/releases/download/v1.9.6/sbt-1.9.6.tgz | tar -xz -C /usr/local && \
-    /usr/local/sbt/bin/sbt clean dist
+# Play Framework builden und Distribution erstellen
+RUN /usr/local/sbt/bin/sbt clean dist
 
-# Entpacke die Distribution
-RUN unzip target/universal/*.zip
+# Distribution entpacken
+RUN unzip -q target/universal/*.zip -d /app
 
-# Setze feste Werte für die Umgebungsvariablen
+# Setze Umgebungsvariablen
 ENV PLAY_SECRET="aebDC3+kl/BqjsjnuND+UUbNJH0BhlyrJnSJEUISaZw="
 ENV PORT=9000
 
 # Dokumentiere den offenen Port
 EXPOSE 9000
 
-# Startbefehl setzen
-CMD ["./bin/set-game-web", "-Dplay.http.secret.key=${PLAY_SECRET}", "-Dhttp.port=${PORT}"]
+# Starte die Anwendung
+CMD ["/app/set-game-web-1.0-SNAPSHOT/bin/set-game-web", "-Dplay.http.secret.key=${PLAY_SECRET}", "-Dhttp.port=${PORT}"]
