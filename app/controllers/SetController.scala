@@ -29,6 +29,7 @@ class SetController @Inject()(val controllerComponents: ControllerComponents) ex
     Ok(gameController.game.toJson)
   }
 
+
   def cards(gameId: String): Action[AnyContent] = Action {
     val gameController = getOrCreateController(gameId)
     Ok(Json.obj(
