@@ -24,15 +24,15 @@ function createStripedPattern(color, strokeWidth) {
   const patternCanvas = document.createElement("canvas");
   const patternContext = patternCanvas.getContext("2d");
 
-// Give the pattern a width and height of 50
+  // Give the pattern a width and height of 50
   patternCanvas.width = strokeWidth * 2;
   patternCanvas.height = strokeWidth * 2;
 
-// Give the pattern a background color and draw an arc
+  // Give the pattern a background color and draw an arc
   patternContext.fillStyle = color;
   patternContext.fillRect(0, 0, patternCanvas.width, strokeWidth);
 
-// Create our primary canvas and fill it with the pattern
+  // Create our primary canvas and fill it with the pattern
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   return ctx.createPattern(patternCanvas, "repeat");
@@ -62,6 +62,7 @@ export default {
   },
   methods: {
     renderCard(canvasId) {
+      this.$forceUpdate();
       const canvasArray = this.$refs[`cardCanvas-${canvasId}`];
 
       if (Array.isArray(canvasArray) && canvasArray[0]?.tagName === "CANVAS") {
@@ -69,8 +70,12 @@ export default {
         const card = this.localCards[canvasId]
         console.log(card, canvasId);
         const ctx = canvas.getContext('2d');
-
         if (ctx) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          this.$forceUpdate();
+
           let color;
           if (card.color === "RED") {
             color = '#da0100';
@@ -167,6 +172,7 @@ export default {
               ctx.fill();
               ctx.stroke();
             }
+            this.$forceUpdate();
           }
         } else {
           console.warn(`Canvas context for ID ${canvasId} could not be retrieved.`);
@@ -237,6 +243,7 @@ export default {
           this.localCards.forEach((_, index) => {
             this.renderCard(index);
           });
+          this.$forceUpdate();
         });
       },
     },
