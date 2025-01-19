@@ -5,7 +5,7 @@
       <div class="value">
         <a href="#"
            class="button-left"
-           :class="{ disabled: playerCount <= 1 }"
+           :class="{ disabled: playerCount <= 2 }"
            @click.prevent="removePlayer">&lt;</a>
         {{ playerCount }}
         <a href="#"

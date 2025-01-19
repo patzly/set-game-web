@@ -39,9 +39,15 @@ a {
 
 .menu {
     display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
     justify-content: start;
+    align-items: center;
     border-bottom: 2px solid #000;
     padding-left: 0.6em;
+}
+.menu::-webkit-scrollbar {
+    display: none;
 }
 
 .menu .game-id {
@@ -49,9 +55,8 @@ a {
     font-weight: var(--text-weight);
     font-size: var(--text-size);
     display: flex;
-    align-items: center;
     margin-left: auto;
-    padding: 0.2em 0.4em; /* Reduzierte Polsterung für ein kleineres Element */
+    padding: 0.5em 0.4em; /* Reduzierte Polsterung für ein kleineres Element */
     color: #000; /* Beibehaltung der Textfarbe */
     background-color: transparent;
     border: none; /* Border entfernt */
@@ -69,7 +74,7 @@ a {
 .menu .game-id input {
     width: 6em;
     font-family: var(--text-font), monospace;
-    font-weight: var(--text-weight);
+    font-weight: 300;
     font-size: var(--text-size);
     padding: 0;
     border: none; /* Minimaler Rahmen für Eingabe */
@@ -95,7 +100,7 @@ a {
 
 
 .menu a {
-    padding: 0.3em 0.6em;
+    padding: 0.7em 0.6em;
     font-family: var(--text-font), monospace;
     font-weight: var(--text-weight);
     font-size: var(--text-size);
@@ -146,7 +151,7 @@ a {
     pointer-events: none;
 }
 .settings .row .value .button-left, .settings .row .value .button-right {
-    margin: 0 1.5em;
+    padding: 0 1em;
 }
 .start-button, .rules-container .button {
     font-family: var(--text-font), monospace;
@@ -285,15 +290,21 @@ a {
 .player-selection {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     background-color: #f4f1b4;
     border-top: 2px solid #333;
+    padding-left: 1em;
     padding-top: 0.7em;
     padding-bottom: 0.5em;
+    gap: 15px;
+    scrollbar-width: none;
 }
 
 .player-selection a {
-    margin: 0 15px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin: 0;
     text-decoration: none;
     color: #060488;
     border: 2px solid transparent;
@@ -303,6 +314,9 @@ a {
     font-size: var(--text-size);
     border-radius: 16px;
     padding: 8px 16px;
+}
+.player-selection::-webkit-scrollbar {
+    display: none;
 }
 .player-selection a:hover {
     background-color: rgba(0, 0, 0, 0.05);
@@ -410,7 +424,7 @@ input[type="text"] {
 }
 
 .game-options .create-game {
-    width: 250px; /* Etwas schmaler als vorher */
+    width: 9em;
     padding: 12px 0;
     text-align: center;
     font-family: var(--text-font), monospace;
@@ -441,7 +455,7 @@ input[type="text"] {
     font-weight: var(--text-weight);
     font-size: var(--text-size);
     padding: 8px 12px;
-    width: 200px;
+    width: 5em;
     border: 2px solid #000;
     border-radius: var(--card-radius);
 }
@@ -510,7 +524,7 @@ input[type="text"] {
     font-size: var(--text-size);
     padding: 10px;
     width: 95%;
-    border: 2px solid #ccc;
+    border: 2px solid #000;
     border-radius: var(--card-radius);
     transition: border-color 0.3s;
 }
