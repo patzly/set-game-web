@@ -6,12 +6,13 @@
          class="button create-game"
          @click.prevent="createGame">CREATE GAME</a>
 
+      OR
       <!-- Join Game Input Field and Button in the same row -->
       <div class="join-game-wrapper">
         <input type="text"
                class="game-id-input"
                v-model="gameId"
-               placeholder="Enter Game ID" />
+               placeholder="Game ID" />
         <a href="#"
            class="button join-game"
            @click.prevent="joinGame">JOIN GAME</a>

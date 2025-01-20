@@ -10,7 +10,10 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 
 class SetWebSocketActor(out: ActorRef, socketManager: ActorRef, controller: IController, gameId: String) extends Actor {
 
-  override def preStart(): Unit = socketManager ! Connect(out, gameId)
+  override def preStart(): Unit = {
+    socketManager ! Connect(out, gameId)
+    controller.handleAction(ChangePlayerCountAction(2))
+  }
 
   override def postStop(): Unit = socketManager ! Disconnect(out, gameId)
 

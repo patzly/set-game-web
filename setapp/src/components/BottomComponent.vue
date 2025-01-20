@@ -13,7 +13,6 @@
            @click.prevent="selectPlayer(player)">
           PLAYER {{ player.number }}: {{ player.sets.length }}
         </a>
-
       </div>
     </div>
     <div v-if="gameState" class="message">{{ message }}</div>

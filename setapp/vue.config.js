@@ -6,7 +6,7 @@ module.exports = {
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: process.env.NODE_ENV === 'production' ? '/set-game-web/' : '/',
+  //publicPath: process.env.NODE_ENV === 'production' ? '/set-game-web/' : '/',
 
   pwa: {
     name: 'SET App',

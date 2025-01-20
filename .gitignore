@@ -8,3 +8,4 @@ target
 /.settings
 /node_modules
 /RUNNING_PID
+/setapp/dist
